@@ -1,12 +1,13 @@
+// import Block from "./Block"
+import Player from "./Player"
+import { PlayerData } from "./StateManager/stateManagementTypes"
 import Vector from "./Vector"
-
 
 // Loading sprites
 const tilemapSource = require("../public/tilemap-separated.png")
 
 export const TILEMAP = new Image()
 TILEMAP.src = tilemapSource
-
 
 export const BLOCK_LINE_WIDTH = 2
 export const FORCE = 20
@@ -48,20 +49,20 @@ export const SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP = {
     "BOAT_RIGHT_L2": new Vector(16, 7),
     "SHADOW": new Vector(0, 5)
 }
-export enum Visibility {
-    hidden,
-    visible
-}
+
+// const NONE_BLOCK = new Block(new Vector(0, 0), new Vector(0, 0), 0, 0, "NONE")
+export const NONE_PLAYER = new Player("NONE", "rgba(0, 0, 0, 0)", {x: 0, y: 0})
 
 // Map definition
 export const MAP = [
     ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+    ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
     ["W", "WTL", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WTR", "W", "W", "W", "WTL", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WTR", "W", "W"],
     ["W", "WL", "T", "MOUNTAIN", "T", "T", "T", "T", "TOWER_LEVEL_3", "WR", "W", "W", "W", "WL", "T", "MOUNTAIN", "T", "T", "T", "T", "TOWER_LEVEL_3", "WR", "W", "W"],
     ["W", "WL", "T", "T", "H", "TREES", "TREES", "T", "T","WR", "W", "W", "W", "WL", "T", "T", "H", "TREES", "TREES", "T", "T","WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "TREES", "T", "T", "T", "WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "TREES", "T", "T", "T", "WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "T","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "T","WR", "W", "W"],
-    ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "MOUNTAIN", "MOUNTAIN","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "MOUNTAIN", "MOUNTAIN","WR", "W", "W"],
+    ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "MOUNTAIN","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "MOUNTAIN","WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "MOUNTAIN", "T", "T","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "MOUNTAIN", "T", "T","WR", "W", "W"],
     ["W", "WBL", "WB", "SHIP", "WB", "WB", "WB", "WB", "WB", "WBR", "W", "W", "W", "WBL", "WB", "SHIP", "WB", "WB", "WB", "WB", "WB", "WBR", "W", "W"],
     ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
@@ -72,9 +73,20 @@ export const MAP = [
     ["W", "WL", "T", "T", "H", "TREES", "TREES", "T", "T","WR", "W", "W", "W", "WL", "T", "T", "H", "TREES", "TREES", "T", "T","WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "TREES", "T", "T", "T", "WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "TREES", "T", "T", "T", "WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "T","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "T","WR", "W", "W"],
-    ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "MOUNTAIN", "MOUNTAIN","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "MOUNTAIN", "MOUNTAIN","WR", "W", "W"],
+    ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "MOUNTAIN","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "T", "T", "MOUNTAIN","WR", "W", "W"],
     ["W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "MOUNTAIN", "T", "T","WR", "W", "W", "W", "WL", "TOWER_LEVEL_1", "T", "T", "T", "MOUNTAIN", "T", "T","WR", "W", "W"],
     ["W", "WBL", "WB", "SHIP", "WB", "WB", "WB", "WB", "WB", "WBR", "W", "W", "W", "WBL", "WB", "SHIP", "WB", "WB", "WB", "WB", "WB", "WBR", "W", "W"],
     ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],   
+    ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
+    ["W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
 ]
+
+export const NONE_PLAYER_DATA: PlayerData = {
+    name: "NONE",
+    alive: true,
+    color: "rgba(0, 0, 0, 0)",
+    blocks: [],
+    canGoOnWater: false,
+    blockSelected: null,
+    population: 0
+}

@@ -1,0 +1,19 @@
+.delete {
+    float: right;
+}
+
+.delete:hover {
+    color: red;
+    cursor: pointer;
+}
+
+#showColor {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 30px;
+    height: 100%;
+    display: inline-block;
+    border-right: 3px solid white;
+    /* padding: 5px */
+}

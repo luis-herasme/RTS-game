@@ -1,13 +1,12 @@
 import Block from "./Block"
+import { BlockData } from "./StateManager/stateManagementTypes"
 import Vector from "./Vector"
 
-class Settlement extends Block { 
-
-    private _level: number
+class Settlement extends Block {
+    private _level: number = 0
 
     constructor(position: Vector, size: Vector, x: number, y: number, type: string)  {
         super(position, size, x, y, type)
-        this._level = 0
     }
 
     public get level(): number {
@@ -35,7 +34,6 @@ class Settlement extends Block {
             this._level = prev_level
         }
     }
-    
 }
 
 export default Settlement

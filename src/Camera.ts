@@ -1,66 +1,45 @@
 import Block from "./Block"
-import { FORCE } from "./constants"
-import Cursor from "./Cursor"
+import { BLOCK_DEFAULT_SIZE } from "./constants"
+import FPS from "./FPSManager"
+import Scene from "./Scene"
 import Vector from "./Vector"
 
 class Camera {
-    private _position: Vector = new Vector(0, 0)
+    public position: Vector = new Vector(0, 0)
     private velocity: Vector = new Vector(0, 0)
     private acceleration: Vector = new Vector(0, 0)
     private inertia: number = 1
     private friction: number = 0.9
-    private map: Array<Array<Block>>
-    
+    private scene: Scene
 
-    constructor(map: Array<Array<Block>>) {
-        this.map = map
-        this.startCameraMovementEvent()
-        
+    constructor(scene: Scene) {
+        this.scene = scene
     }
 
-    public get position(): Vector {
-        return this._position
-    }
-
-    public set position(newPosition: Vector) {
-        this._position = newPosition
-        this._position.x = Math.round(this._position.x)
-        this._position.y = Math.round(this._position.y)
-        
-        this.map.forEach(x => {
-            x.forEach(block => {
-                block.positionRelativeToCamera = Vector.add(block.position, this._position)
-            })
-        })
-    }
-
-    private addForce(force: Vector): void {
-        this.acceleration.add(Vector.mult(1 / this.inertia, force))
+    public setCenterAtBlock(block: Block): void {
+        this.position.x = -block.absolutePosition.x + window.innerWidth / 2 - BLOCK_DEFAULT_SIZE / 2
+        this.position.y = -block.absolutePosition.y + window.innerHeight / 2 - BLOCK_DEFAULT_SIZE / 2
     }
 
     public update(): void {
-        this.position = Vector.add(this.position, this.velocity)
+        this.updatePhysics()
+        this.updateBlocksRelativePosition()
+    }
+
+    public addForce(force: Vector): void {
+        this.acceleration.add(Vector.mult(1 / this.inertia, force))
+    }
+
+    public updatePhysics(): void {
+        this.position = Vector.add(this.position, Vector.mult((60 * FPS.frameTime/1000), this.velocity))
         this.velocity.add(this.acceleration)
         this.velocity.mult(this.friction)
         this.acceleration.zero()
     }
 
-    private startCameraMovementEvent() {
-        document.addEventListener("keydown", (e) => {
-            const key = e.key.toLocaleLowerCase()
-
-            if (key === 'w') {
-                this.addForce(new Vector(0, FORCE))
-            }
-            else if (key === 's') {
-                this.addForce(new Vector(0, -FORCE))
-            }
-            else if (key === 'd') {
-                this.addForce(new Vector(-FORCE, 0))
-            }
-            else if (key === 'a') {
-                this.addForce(new Vector(FORCE, 0))
-            }
+    public updateBlocksRelativePosition(): void {
+        this.scene.eachBlock(block => {
+            block.positionRelativeToCamera = Vector.add(block.absolutePosition, this.position)
         })
     }
 }

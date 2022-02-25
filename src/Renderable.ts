@@ -2,7 +2,8 @@ import {
     SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP,
     BLOCK_LINE_WIDTH,
     TILE_SIZE,
-    TILEMAP
+    TILEMAP,
+    BLOCK_DEFAULT_SIZE
 } from "./constants"
 import Vector from "./Vector"
 
@@ -11,7 +12,9 @@ class Renderable {
     public tilemap: HTMLImageElement
     private _size: Vector
     public color: string = ""
-    
+    public static scale: number = 1
+    public static context: CanvasRenderingContext2D
+
     constructor(positionRelativeToCamera: Vector, size: Vector) {
         this.positionRelativeToCamera = positionRelativeToCamera
         this._size = size
@@ -21,66 +24,72 @@ class Renderable {
     public get size(): Vector {
         return this._size
     }
-    
-    public drawTile(context: CanvasRenderingContext2D, type: string): void {
-        context.beginPath()
-        context.drawImage(
+
+    public static clearWindow(): void {
+        Renderable.context.beginPath()
+        Renderable.context.fillStyle = "#000"
+        Renderable.context.fillRect(0, 0, window.innerWidth, window.innerHeight)
+    }
+
+    public drawTile(type: string): void {
+        Renderable.context.beginPath()
+        Renderable.context.drawImage(
             this.tilemap,
             SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[type].x * TILE_SIZE,
             SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[type].y * TILE_SIZE,
             TILE_SIZE,
             TILE_SIZE,
-            this.positionRelativeToCamera.x,
-            this.positionRelativeToCamera.y,
-            this._size.x,
-            this._size.y
+            Math.round(Renderable.scale * this.positionRelativeToCamera.x),
+            Math.round(Renderable.scale * this.positionRelativeToCamera.y),
+            Math.round(Renderable.scale * this._size.x - 2 * Renderable.scale),
+            Math.round(Renderable.scale * this._size.y - 2 * Renderable.scale)
         )
     }
 
-    public drawText(context: CanvasRenderingContext2D, text: string) {
-        context.beginPath()
-        context.fillStyle = "#FFFFFF"
-        context.strokeStyle = "#333"
-        context.lineWidth = 7
-        context.font = "20px 'Press Start 2P'"
-        context.strokeText(
+    public drawText(text: string) {
+        Renderable.context.beginPath()
+        Renderable.context.fillStyle = "#FFFFFF"
+        Renderable.context.strokeStyle = "#000"
+        Renderable.context.lineWidth = Renderable.scale * 7
+        Renderable.context.font = 20 * Renderable.scale + "px 'Press Start 2P'"
+        Renderable.context.strokeText(
             String(text),
-            this.positionRelativeToCamera.x + this._size.x / 2 - 30,
-            this.positionRelativeToCamera.y + this._size.y / 2 - 20
+            Renderable.scale * (this.positionRelativeToCamera.x + this._size.x / 2 - BLOCK_DEFAULT_SIZE * 0.3),
+            Renderable.scale * (this.positionRelativeToCamera.y + this._size.y / 2 - BLOCK_DEFAULT_SIZE * 0.2)
         )
-        context.font = "20px 'Press Start 2P'"
-        context.fillText(
+        Renderable.context.font = 20 * Renderable.scale + "px 'Press Start 2P'"
+        Renderable.context.fillText(
             String(text),
-            this.positionRelativeToCamera.x + this._size.x / 2 - 30,
-            this.positionRelativeToCamera.y + this._size.y / 2 - 20
+            Renderable.scale * (this.positionRelativeToCamera.x + this._size.x / 2 - BLOCK_DEFAULT_SIZE * 0.3),
+            Renderable.scale * (this.positionRelativeToCamera.y + this._size.y / 2 - BLOCK_DEFAULT_SIZE * 0.2)
         )
     }
 
-    public drawRect(context: CanvasRenderingContext2D, stroke: boolean, fillColor: string = null) {
+    public drawRect(stroke: boolean, fillColor: string = null) {
 
         if (fillColor == null) {
             fillColor = this.color
         }
 
-        context.beginPath()
+        Renderable.context.beginPath()
         if (stroke) {
-            context.strokeStyle = "rgba(255, 255, 255, 0.2)"
-            context.lineWidth = BLOCK_LINE_WIDTH
+            Renderable.context.strokeStyle = "rgba(255, 255, 255, 0.2)"
+            Renderable.context.lineWidth = BLOCK_LINE_WIDTH
         } else {
-            context.fillStyle = fillColor
+            Renderable.context.fillStyle = fillColor
         }
 
-        context.rect(
-            this.positionRelativeToCamera.x,
-            this.positionRelativeToCamera.y,
-            this._size.x,
-            this._size.y 
+        Renderable.context.rect(
+            Math.round(Renderable.scale * this.positionRelativeToCamera.x),
+            Math.round(Renderable.scale * this.positionRelativeToCamera.y),
+            Math.round(Renderable.scale * this._size.x - 2 * Renderable.scale),
+            Math.round(Renderable.scale * this._size.y - 2 * Renderable.scale)
         )
 
         if (stroke) {
-            context.stroke()
+            // context.stroke()
         } else {
-            context.fill()
+            Renderable.context.fill()
         }
     }
 }

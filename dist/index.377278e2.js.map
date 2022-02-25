@@ -1,1 +1,0 @@
-{"mappings":"AACA,KAAK,CAAC,MAAM,GAAG,QAAQ,CAAC,aAAa,CAAC,CAAQ;AAC9C,QAAQ,CAAC,WAAW,CAAC,MAAM","sources":["src/index.ts"],"sourcesContent":["\r\nconst canvas = document.createElement(\"canvas\")\r\ndocument.appendChild(canvas)\r\n"],"names":[],"version":3,"file":"index.377278e2.js.map","sourceRoot":"../"}

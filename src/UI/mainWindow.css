@@ -1,0 +1,55 @@
+#screen {
+    width: 100%;
+    height: 100vh;
+    z-index: 20;
+    position: absolute;
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-size: 16px;
+}
+
+h1 {
+    color: white;
+    padding-top: 30vh;
+    font-size: 7vh;
+}
+
+button {
+    color: black;
+    background-color: white;
+    border: none;
+    padding: 15px;
+}
+
+input {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    color: black;
+    background-color: white;
+    border: none;
+    padding: 15px; 
+}
+
+button:hover {
+    transition-duration: 200ms;
+    background-color: #ddd;
+    /* padding: 20px; */
+    margin-top: 1px;
+}
+
+.disabledButton {
+    color: black;
+    background-color: gray;
+    border: none;
+    padding: 15px;
+}
+
+.disabledButton:hover {
+    cursor: not-allowed;
+}
+
+
+button:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,9 @@
+#gameConfiguUI {
+    display: grid;
+    gap: 5vw;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+
