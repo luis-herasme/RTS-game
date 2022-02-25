@@ -1,16 +1,24 @@
 import { BlockData, BlockPosition, PlayerData, State } from "./stateManagementTypes"
 
 class BaseStateManager {
-    protected state: State
+    protected state: State = {} as State
+    private stateSetted:  boolean = false
 
     public loadState(state: State) {
-        if (this.state === undefined) {
+        if (!this.stateSetted) {
             this.state = state
+            this.stateSetted = true
         }
     }
 
     public getPlayerData(playerName: string): PlayerData {
-        return this.state.players[playerName]
+        const player: PlayerData | undefined = this.state.players.get(playerName)
+
+        if (player == undefined) {
+            throw Error("playerName provided is not defined in the state.")
+        }
+
+        return player
     }
 
     protected getBlockAt(position: BlockPosition): BlockData {

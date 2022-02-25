@@ -38,7 +38,7 @@ class Camera {
     }
 
     public updateBlocksRelativePosition(): void {
-        this.scene.eachBlock(block => {
+        this.scene.eachBlock((block: Block) => {
             block.positionRelativeToCamera = Vector.add(block.absolutePosition, this.position)
         })
     }

@@ -1,4 +1,3 @@
-import Block from "./Block"
 import Cursor from "./Cursor"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
 
@@ -13,7 +12,6 @@ class Player {
         this.name = name
         this.color = color
         this.capital = capital
-
         this.cursor = new Cursor(this)
     }
 

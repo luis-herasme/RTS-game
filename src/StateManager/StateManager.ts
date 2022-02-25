@@ -1,5 +1,5 @@
 import PopulationGrowthSM from "./PopulationGrowthSM"
-import { BlockData, BlockDataValidToAPlayer, BlockPosition, Visibility } from "./stateManagementTypes"
+import { BlockData, BlockDataValidToAPlayer, BlockPosition, PlayerData, Visibility } from "./stateManagementTypes"
 
 
 class StateManager extends PopulationGrowthSM {
@@ -32,9 +32,23 @@ class StateManager extends PopulationGrowthSM {
     // ! END API
 
     private getBlockValidDataToPlayer(block: BlockData, playerName: string): BlockDataValidToAPlayer {
+
+        const visibility: Visibility | undefined = block.visibility.get(playerName)
+        const player: PlayerData = this.getPlayerData(block.ownerName)
+
+        if (visibility === undefined) {
+            throw Error("Visibility for this player is not defined.")
+        }
+
+        const color: string | undefined  = player.color
+
+        if (color === undefined) {
+            throw Error("Color for this player is not defined.")
+        }
+
         return {
             ownerName: block.ownerName,
-            color: this.state.players[block.ownerName].color,
+            color: color,
             position: {
                 x: block.position.x,
                 y: block.position.y
@@ -43,8 +57,8 @@ class StateManager extends PopulationGrowthSM {
             type: block.type,
             level: block.level,
             ship: block.ship,
-            visibility: block.visibility[playerName],
-            canBeConquer: block.canBeConquer,
+            visibility: visibility,
+            canBeConquer: block.canBeConquer
         }
     }
 }

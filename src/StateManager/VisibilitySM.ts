@@ -4,15 +4,15 @@ import { BlockData, PlayerData, Visibility } from "./stateManagementTypes"
 class StateVisibility extends StateChecks {
 
     protected setBlockVisibility(value: Visibility, block: BlockData, player: PlayerData): void {
-        const previousState: Visibility = block.visibility[player.name]
+        const previousState: Visibility | undefined = block.visibility.get(player.name)
 
-        block.visibility[player.name] = value
+        block.visibility.set(player.name, value)
 
         if (this.isNextToPlayer(block, player.name)) {
-            block.visibility[player.name] = Visibility.visible
+            block.visibility.set(player.name, Visibility.visible)
         }
 
-        if (previousState != block.visibility[player.name]) {
+        if (previousState != block.visibility.get(player.name)) {
             block.dirty = true
         }
     }

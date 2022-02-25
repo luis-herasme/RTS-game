@@ -28,7 +28,12 @@ const positions = [
     }
 ]
 
-export function startGame(config) {
+interface playerConfiguration {
+    name: string
+    color: string
+}
+
+export function startGame(config: Array<playerConfiguration>) {
 
     // Single player
     const stateManager = new StateManager()

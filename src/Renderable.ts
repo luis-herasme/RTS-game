@@ -3,7 +3,8 @@ import {
     BLOCK_LINE_WIDTH,
     TILE_SIZE,
     TILEMAP,
-    BLOCK_DEFAULT_SIZE
+    BLOCK_DEFAULT_SIZE,
+    getTextureAtlasPosition
 } from "./constants"
 import Vector from "./Vector"
 
@@ -35,8 +36,8 @@ class Renderable {
         Renderable.context.beginPath()
         Renderable.context.drawImage(
             this.tilemap,
-            SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[type].x * TILE_SIZE,
-            SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[type].y * TILE_SIZE,
+            getTextureAtlasPosition(type).x * TILE_SIZE,
+            getTextureAtlasPosition(type).y * TILE_SIZE,
             TILE_SIZE,
             TILE_SIZE,
             Math.round(Renderable.scale * this.positionRelativeToCamera.x),
@@ -65,7 +66,7 @@ class Renderable {
         )
     }
 
-    public drawRect(stroke: boolean, fillColor: string = null) {
+    public drawRect(stroke: boolean, fillColor: string | null = null) {
 
         if (fillColor == null) {
             fillColor = this.color

@@ -19,8 +19,8 @@ class EventManager {
     private camera: Camera
     private player: Player
     private map: Array<Array<Block>>
-    private cameraDisplacementAfterDrag: number
-    private clickDuration: number
+    private cameraDisplacementAfterDrag: number = 0
+    private clickDuration: number = 0
     private clientStateManager: ClientStateManager
     // private gameManager: GameManager
 

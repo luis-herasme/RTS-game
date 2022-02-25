@@ -1,7 +1,7 @@
 import Player from "./Player"
 import Vector from "./Vector"
 import Renderable from "./Renderable"
-import { NONE_PLAYER, SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP } from "./constants"
+import { getTextureAtlasPosition, isTextureDefined, NONE_PLAYER, SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP } from "./constants"
 import { BlockDataValidToAPlayer, Visibility } from "./StateManager/stateManagementTypes"
 
 class Block extends Renderable {
@@ -21,7 +21,7 @@ class Block extends Renderable {
     public population: number = 0
 
     public owner: Player = NONE_PLAYER
-    public ownerName: string
+    public ownerName: string = ""
     public ship: boolean = false
 
     constructor(position: Vector, size: Vector, x: number, y: number, type: string) {
@@ -84,7 +84,8 @@ class Block extends Renderable {
             // If this tile has been seen draw a block 
             if (this.seen) {
                 this.drawTile(this.typeSeen)
-                if (SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[this.typeSeen + "_L2"]) {
+                // if (SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[this.typeSeen + "_L2"]) {
+                if (isTextureDefined(this.typeSeen + "_L2")) {
                     this.drawTile(this.typeSeen + "_L2")
                 }
             }
@@ -102,7 +103,7 @@ class Block extends Renderable {
                 this.drawRect(false)
             }
 
-            if (SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[this.type + "_L2"]) {
+            if (isTextureDefined(this.type + "_L2")) {
                 this.drawTile(this.type + "_L2")
             }
 

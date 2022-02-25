@@ -1,6 +1,6 @@
 import { NONE_PLAYER_DATA } from "../constants"
 import Move from "./MoveSM"
-import { BlockData, Visibility } from "./stateManagementTypes"
+import { BlockData, PlayerData, Visibility } from "./stateManagementTypes"
 
 
 class PopulationGrowthSM extends Move {
@@ -49,10 +49,13 @@ class PopulationGrowthSM extends Move {
 
     private deleteBoat(block: BlockData): void {
         const previousOwnerName = block.ownerName
+        const player: PlayerData = this.getPlayerData(previousOwnerName)
+
         block.ownerName = NONE_PLAYER_DATA.name
         block.previousOwnerName = previousOwnerName
         block.ship = false
-        this.setSurroundingsVisibility(block, Visibility.hidden, this.state.players[previousOwnerName])
+
+        this.setSurroundingsVisibility(block, Visibility.hidden, player)
     }
 }
 

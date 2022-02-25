@@ -7,8 +7,8 @@ class Move extends PlayersStateManager {
     public move(newBlockPosition: BlockPosition, prevBlockPosition: BlockPosition, playerName: string, moveHalf: boolean = false): boolean {
         const newBlock: BlockData = this.getBlockAt(newBlockPosition)
         const prevBlock: BlockData = this.getBlockAt(prevBlockPosition)
-        const player: PlayerData = this.state.players[playerName]
-
+        const player: PlayerData = this.getPlayerData(playerName)
+    
         return this.moveHelper(newBlock, prevBlock, player, moveHalf)
     }
 
@@ -74,8 +74,10 @@ class Move extends PlayersStateManager {
 
     private moveUnits(newBlock: BlockData, prevBlock: BlockData, populationToMove: number): boolean {
         // If you are not the owner of the new block
-        // If your population is too low you cant conquer
-        if (newBlock.ownerName != prevBlock.ownerName && prevBlock.population >= 1) {
+        if (newBlock.ownerName != prevBlock.ownerName) {
+            
+            // If your population is too low you cant conquer
+            if (prevBlock.population <= 1) return false
 
             // If your poplation is greater you can conquer
             if (populationToMove > newBlock.population) {

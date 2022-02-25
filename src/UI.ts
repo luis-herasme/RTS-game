@@ -1,3 +1,4 @@
+import Block from "./Block"
 import Cursor from "./Cursor"
 import FPS from "./FPSManager"
 import Player from "./Player"
@@ -11,19 +12,18 @@ interface playerDisplayData {
 }
 
 class UI {
-    private population: HTMLElement
-    private levelUpButton: HTMLElement
+    private population: HTMLElement | null
+    private levelUpButton: HTMLElement | null
     private updateRate: number
-    private playersLeaderBoard: HTMLElement
-    private fps: HTMLElement
+    private playersLeaderBoard: HTMLElement | null
+    private fps: HTMLElement | null
 
     constructor(updateRate: number = 1000) {
         this.population = document.getElementById("population")
         this.levelUpButton = document.getElementById("levelUp")        
         this.playersLeaderBoard = document.getElementById("playersLeaderBoard")
-        this.population.innerText = "Population: 0"
-        this.updateRate = updateRate
         this.fps = document.getElementById("FPS")
+        this.updateRate = updateRate
     }
 
     public start(scene: Scene, cursor: Cursor) {
@@ -39,7 +39,11 @@ class UI {
     }
 
     public updateFPS(): void {
-        this.fps.innerText = "FPS: " + (1000/FPS.frameTime).toFixed(1)
+        if (this.fps !== null) {
+            this.fps.innerText = "FPS: " + (1000/FPS.frameTime).toFixed(1)
+        } else {
+            throw Error("FPS DOM element not defined.")
+        }
     }
 
     public updateLeaderBoard(scene: Scene) {
@@ -82,12 +86,17 @@ class UI {
 
     // Start updating population text
     public updatePopulationText(scene: Scene) {
+        if (this.population == null) {
+            throw Error("population DOM element not defined.")
+        }
+
         let totalPopulation = 0
-        scene.eachBlock((block) => {
+        scene.eachBlock((block: Block) => {
             if (block.owner.name == "Luis") {
                 totalPopulation += block.population
             }
         })
+
         this.population.innerText = `Population: ${totalPopulation}`
     }
 
@@ -118,6 +127,9 @@ class UI {
     }
 
     public updateLevelUpButtonVisibility(cursor: Cursor) {
+        if (this.levelUpButton == null) {
+            throw Error("LevelUpButton DOM element not defined.")
+        }
         if (cursor.blockSelected) {
             if (cursor.blockSelected.level !== undefined) {
                 if (

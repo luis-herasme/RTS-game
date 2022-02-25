@@ -2,26 +2,33 @@ import Block from "./Block"
 import { BlockData, PlayerData, State, Visibility } from "./StateManager/stateManagementTypes"
 
 function setBlockSurroundingVisibility(block: BlockData, map: Array<Array<BlockData>>): void {
-    map[block.position.y][block.position.x].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y][block.position.x + 1].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y][block.position.x - 1].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y + 1][block.position.x].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y - 1][block.position.x].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y + 1][block.position.x + 1].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y + 1][block.position.x - 1].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y - 1][block.position.x + 1].visibility[block.ownerName] = Visibility.visible
-    map[block.position.y - 1][block.position.x - 1].visibility[block.ownerName] = Visibility.visible
+    map[block.position.y][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y + 1][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y - 1][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y + 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y + 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y - 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+    map[block.position.y - 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
 }
 
 function setVisibility(map: Array<Array<BlockData>>, playersNameList: Array<string>): void {
+
+    // Setting all for all players to hidden
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             const block = map[y][x]
-
             for (let playerName of playersNameList) {
-                block.visibility[playerName] = Visibility.hidden
+                block.visibility.set(playerName, Visibility.hidden)
             }
+        }
+    }
 
+    // Setting to visible blocks around a player
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[y].length; x++) {
+            const block = map[y][x]
             if (block.ownerName !== "NONE") {
                 setBlockSurroundingVisibility(block, map)
             }
@@ -31,7 +38,7 @@ function setVisibility(map: Array<Array<BlockData>>, playersNameList: Array<stri
 
 function getBlockData(block: Block): BlockData {
     const visibility = new Map<string, Visibility>()
-    visibility[block.owner.name] = Visibility.visible
+    visibility.set(block.owner.name, Visibility.visible)
     return {
         ownerName: block.owner.name,
         previousOwnerName: "NONE",
@@ -89,24 +96,30 @@ function generatePlayersStateFromMap(map: Array<Array<Block>>): Map<string, Play
         for (let x = 0; x < map[y].length; x++) {
             const block = map[y][x]
 
-            if (!playersData[block.owner.name]) {
-                playersData[block.owner.name] = getPlayerDataFromBlock(block)
+            if (!playersData.get(block.owner.name)) {
+                playersData.set(block.owner.name, getPlayerDataFromBlock(block))
             }
 
-            if (!playersBlocksData[block.owner.name]) {
-                playersBlocksData[block.owner.name] = []
+            if (!playersBlocksData.get(block.owner.name)) {
+                playersBlocksData.set(block.owner.name, [])
             }
 
-            playersBlocksData[block.owner.name].push(getPlayerDataFromBlock(block))    
+            const player: Array<BlockData> | undefined  = playersBlocksData.get(block.owner.name)
+            if (player === undefined) {
+                throw Error("Player block data is not defined for this player, (An empty array is needed).")
+            }
+            player.push(getBlockData(block))    
         }
     }
 
     for (let playerBlocksData of Object.values(playersBlocksData)) {
         const playerName = playerBlocksData[0].name
-        const playerData = playersData[playerName]
-        console.log("playersData: ", playersData)
-        console.log("playerData: ", playerData)
-        console.log("playersBlocksData: ", playersBlocksData)
+        const playerData: PlayerData | undefined = playersData.get(playerName)
+
+        if (playerData === undefined) {
+            throw Error("Player is not defined in the state that is beeing constructed yet.")
+        }
+
         playerData.blocks = playerBlocksData
         playerData.population = getPlayerPopulationFromBlocks(playerBlocksData)
     }

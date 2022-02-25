@@ -7,7 +7,7 @@ class Scene {
     public map: Array<Array<Block | Settlement>>
 
     constructor(map: Array<Array<string>>) {
-        loadMap(map, this)
+        this.map = loadMap(map)
     }
 
     // Adds a block to the scene in the x, y position
@@ -19,7 +19,7 @@ class Scene {
     public eachBlock(fn: Function) {
         for (let y = 0; y < this.map.length; y++) {
             for (let x = 0; x < this.map.length; x++) {
-                const block = this.map[y][x]
+                const block: Block = this.map[y][x]
                 fn(block)
             }
         }
@@ -31,7 +31,7 @@ class Scene {
 
     public render(): void {
         Renderable.clearWindow()
-        this.eachBlock((block) => {
+        this.eachBlock((block: Block) => {
             block.render()
         })
     }

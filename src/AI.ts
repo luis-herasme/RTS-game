@@ -1,27 +1,20 @@
 import Player from "./Player"
-import Block from "./Block"
-import Settlement from "./Settlement"
 import StateManager from "./StateManager/StateManager"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
 
 class AI extends Player {
-    // public map: Array<Array<Block | Settlement>>
     private stateManager: StateManager
     private blockSelectedData: BlockPosition
 
     constructor(name: string, color: string, capital: BlockPosition, stateManager: StateManager) {
         super(name, color, capital)
-        // this.map = map
+        this.blockSelectedData = capital
         this.stateManager = stateManager
     }
-    
+
     public start() {
         this.stateManager.setBlockSelectedFromClick(this.name, this.capital)
-
-
         const playerData = this.stateManager.getPlayerData(this.name)
-        // console.log("playerData :", playerData)
-
         if (playerData.blockSelected !== null) {
             this.blockSelectedData = playerData.blockSelected.position
         }

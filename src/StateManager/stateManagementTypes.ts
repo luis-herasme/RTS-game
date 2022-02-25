@@ -38,7 +38,7 @@ export interface BlockDataValidToAPlayer {
     type: string
     level: number
     ship: boolean
-    visibility: Visibility,
+    visibility: Visibility
     canBeConquer: boolean
 }
 

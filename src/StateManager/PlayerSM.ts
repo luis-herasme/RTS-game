@@ -20,7 +20,7 @@ class PlayersStateManager extends StateVisibility {
         }
 
         if (!this.isWater(block)) {
-            this.state.players[player.name].blocks.push(block)
+            player.blocks.push(block)
         }
 
         block.ownerName = player.name
