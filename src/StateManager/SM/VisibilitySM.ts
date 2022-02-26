@@ -3,7 +3,12 @@ import { BlockData, PlayerData, Visibility } from "../stateManagementTypes"
 
 class StateVisibility extends StateChecks {
 
-    protected setBlockVisibility(value: Visibility, block: BlockData, player: PlayerData): void {
+    protected setBlockVisibility(value: Visibility, block: BlockData | null, player: PlayerData): void {
+
+        if (block == null) {
+            return
+        }
+
         const previousState: Visibility | undefined = block.visibility.get(player.name)
 
         block.visibility.set(player.name, value)
@@ -18,15 +23,10 @@ class StateVisibility extends StateChecks {
     }
 
     protected setSurroundingsVisibility(block: BlockData, visibility: Visibility, player: PlayerData): void {
-        this.setBlockVisibility(visibility, this.state.map[block.position.y][block.position.x], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y][block.position.x + 1], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y][block.position.x - 1], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y + 1][block.position.x], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y - 1][block.position.x], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y + 1][block.position.x + 1], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y + 1][block.position.x - 1], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y - 1][block.position.x + 1], player)
-        this.setBlockVisibility(visibility, this.state.map[block.position.y - 1][block.position.x - 1], player)
+        const surroundingBlocks: Array<BlockData | null> = this.getSurroundingBlocks(block)
+        for (let i = 0; i < surroundingBlocks.length; i++) {
+            this.setBlockVisibility(visibility, surroundingBlocks[i], player)    
+        }
     }
 }
 

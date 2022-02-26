@@ -9,7 +9,7 @@ class Camera {
     private velocity: Vector = new Vector(0, 0)
     private acceleration: Vector = new Vector(0, 0)
     private inertia: number = 1
-    private friction: number = 0.9
+    private friction: number = 0.95
     private scene: Scene
 
     constructor(scene: Scene) {
@@ -31,10 +31,12 @@ class Camera {
     }
 
     public updatePhysics(): void {
-        this.position = Vector.add(this.position, Vector.mult((60 * FPS.frameTime/1000), this.velocity))
-        this.velocity.add(this.acceleration)
-        this.velocity.mult(this.friction)
-        this.acceleration.zero()
+        if (FPS.frameTime !== 0) {
+            this.position = Vector.add(this.position, Vector.mult((60 * FPS.frameTime/1000), this.velocity))
+            this.velocity.add(this.acceleration)
+            this.velocity.mult(this.friction)
+            this.acceleration.zero()
+        }
     }
 
     public updateBlocksRelativePosition(): void {

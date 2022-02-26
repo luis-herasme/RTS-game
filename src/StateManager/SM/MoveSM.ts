@@ -4,7 +4,21 @@ import { BlockData, BlockPosition, PlayerData, Visibility } from "../stateManage
 
 class Move extends PlayersStateManager {
 
+    private validPosition({x, y}: BlockPosition) {
+        return (
+            (x < this.state.map.length) ||
+            (x >= 0) ||
+            (y < this.state.map.length) ||
+            (y >= 0)
+        )
+    }
+
     public move(newBlockPosition: BlockPosition, prevBlockPosition: BlockPosition, playerName: string, moveHalf: boolean = false): boolean {
+
+        if (!this.validPosition(newBlockPosition) || !this.validPosition(prevBlockPosition)) {
+            return false
+        }
+
         const newBlock: BlockData = this.getBlockAt(newBlockPosition)
         const prevBlock: BlockData = this.getBlockAt(prevBlockPosition)
         const player: PlayerData = this.getPlayerData(playerName)
@@ -13,7 +27,7 @@ class Move extends PlayersStateManager {
     }
 
     private moveHelper(newBlock: BlockData, prevBlock: BlockData, player: PlayerData, moveHalf: boolean = false): boolean {
-        if (this.isOnBorder(newBlock)) return false
+        // if (this.isOnBorder(newBlock)) return false
         let moved = false
 
         // If you are the owner of the previous block

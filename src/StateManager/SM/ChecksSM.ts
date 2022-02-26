@@ -16,6 +16,7 @@ class StateChecks extends BaseStateManager {
         return (block.type[0] == "W")
     }
 
+    // TODO: ALGO QUE PODRIA IR EN MAP
     protected isOnBorder(block: BlockData): boolean {
         return (
             block.position.y == 0 ||
@@ -25,37 +26,65 @@ class StateChecks extends BaseStateManager {
         )
     }
 
-    protected isNextToPlayer(block: BlockData, playerName: string): boolean {
-        if (!this.isOnBorder(block)) {
-            return (
-                this.state.map[block.position.y][block.position.x].ownerName == playerName ||
-                this.state.map[block.position.y][block.position.x + 1].ownerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x].ownerName == playerName ||
-                this.state.map[block.position.y][block.position.x - 1].ownerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x].ownerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x + 1].ownerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x + 1].ownerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x - 1].ownerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x - 1].ownerName == playerName
-            )
+    // TODO: ALGO QUE PODRIA IR EN MAP
+    private getBlockIfDefined(x: number, y: number): BlockData | null {
+        if (this.state.map[y]) {
+            return this.state.map[y][x]
         }
+        return null
+    }
+
+ // TODO: ALGO QUE PODRIA IR EN MAP
+    protected getSurroundingBlocks(block: BlockData): Array<BlockData | null> {
+        const {x, y} = block.position
+        return [
+            this.getBlockIfDefined(x, y),
+            this.getBlockIfDefined(x + 1, y),
+            this.getBlockIfDefined(x - 1, y),
+            this.getBlockIfDefined(x, y + 1),
+            this.getBlockIfDefined(x, y - 1),
+            this.getBlockIfDefined(x + 1, y + 1),
+            this.getBlockIfDefined(x + 1, y - 1),
+            this.getBlockIfDefined(x - 1, y + 1),
+            this.getBlockIfDefined(x - 1, y - 1),
+        ]
+    }
+
+    private getPreviousOwnerName(block: BlockData | null): string | null {
+        if (block == null) {
+            return null
+        }
+        return block.previousOwnerName
+    }
+
+    private getOwnerName(block: BlockData | null): string | null {
+        if (block == null) {
+            return null
+        }
+        return block.ownerName
+    }
+
+    protected isNextToPlayer(block: BlockData, playerName: string): boolean {
+        const surrondingBlocks: Array<BlockData | null> = this.getSurroundingBlocks(block)
+
+        for (let i = 0; i < surrondingBlocks.length; i++) {
+            if (this.getOwnerName(surrondingBlocks[i]) == playerName) {
+                return true
+            }
+        }
+
         return false
     }
 
     protected wasNextToPlayer(block: BlockData, playerName: string): boolean {
-        if (!this.isOnBorder(block)) {
-            return (
-                this.state.map[block.position.y][block.position.x].previousOwnerName == playerName ||
-                this.state.map[block.position.y][block.position.x + 1].previousOwnerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x].previousOwnerName == playerName ||
-                this.state.map[block.position.y][block.position.x - 1].previousOwnerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x].previousOwnerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x + 1].previousOwnerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x + 1].previousOwnerName == playerName ||
-                this.state.map[block.position.y + 1][block.position.x - 1].previousOwnerName == playerName ||
-                this.state.map[block.position.y - 1][block.position.x - 1].previousOwnerName == playerName
-            )
+        const surrondingBlocks: Array<BlockData | null> = this.getSurroundingBlocks(block)
+
+        for (let i = 0; i < surrondingBlocks.length; i++) {
+            if (this.getPreviousOwnerName(surrondingBlocks[i]) == playerName) {
+                return true
+            }
         }
+
         return false
     }
 }

@@ -21,10 +21,22 @@ class BaseStateManager {
         return player
     }
 
+    // TODO: ALGO QUE PODRIA IR EN MAP
+    protected validPosition({x, y}: BlockPosition) {
+        return (
+            (x < this.state.map.length) ||
+            (x >= 0) ||
+            (y < this.state.map.length) ||
+            (y >= 0)
+        )
+    }
+
+    // TODO: ALGO QUE PODRIA IR EN MAP
     protected getBlockAt(position: BlockPosition): BlockData {
         return this.state.map[position.y][position.x]
     }
 
+    // TODO: ALGO QUE PODRIA IR EN MAP
     // Applies a given function to each block
     protected eachBlock(fn: Function) {
         for (let y = 0; y < this.state.map.length; y++) {

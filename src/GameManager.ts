@@ -46,6 +46,9 @@ class GameManager {
     public start(): void {
         this.uiManager.start(this.scene, this.player.cursor)
         requestAnimationFrame(() => this.update())
+        // setInterval(() => {
+        //     this.update()
+        // }, 0)
     }
 }
 

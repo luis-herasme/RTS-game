@@ -40,10 +40,10 @@ class Renderable {
             getTextureAtlasPosition(type).y * TILE_SIZE,
             TILE_SIZE,
             TILE_SIZE,
-            Math.round(Renderable.scale * this.positionRelativeToCamera.x),
-            Math.round(Renderable.scale * this.positionRelativeToCamera.y),
-            Math.round(Renderable.scale * this._size.x - 2 * Renderable.scale),
-            Math.round(Renderable.scale * this._size.y - 2 * Renderable.scale)
+            ~~(Renderable.scale * this.positionRelativeToCamera.x),
+            ~~(Renderable.scale * this.positionRelativeToCamera.y),
+            ~~(Renderable.scale * this._size.x - 2 * Renderable.scale),
+            ~~(Renderable.scale * this._size.y - 2 * Renderable.scale)
         )
     }
 
@@ -81,10 +81,10 @@ class Renderable {
         }
 
         Renderable.context.rect(
-            Math.round(Renderable.scale * this.positionRelativeToCamera.x),
-            Math.round(Renderable.scale * this.positionRelativeToCamera.y),
-            Math.round(Renderable.scale * this._size.x - 2 * Renderable.scale),
-            Math.round(Renderable.scale * this._size.y - 2 * Renderable.scale)
+            ~~(Renderable.scale * this.positionRelativeToCamera.x),
+            ~~(Renderable.scale * this.positionRelativeToCamera.y),
+            ~~(Renderable.scale * this._size.x - 2 * Renderable.scale),
+            ~~(Renderable.scale * this._size.y - 2 * Renderable.scale)
         )
 
         if (stroke) {
