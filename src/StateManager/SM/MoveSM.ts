@@ -4,15 +4,6 @@ import { BlockData, BlockPosition, PlayerData, Visibility } from "../stateManage
 
 class Move extends PlayersStateManager {
 
-    private validPosition({x, y}: BlockPosition) {
-        return (
-            (x < this.state.map.length) ||
-            (x >= 0) ||
-            (y < this.state.map.length) ||
-            (y >= 0)
-        )
-    }
-
     public move(newBlockPosition: BlockPosition, prevBlockPosition: BlockPosition, playerName: string, moveHalf: boolean = false): boolean {
 
         if (!this.validPosition(newBlockPosition) || !this.validPosition(prevBlockPosition)) {
@@ -47,7 +38,9 @@ class Move extends PlayersStateManager {
             // If you are in a boat and you moved to a block that is on water
             if (prevBlock.ship && player.canGoOnWater && moved) {
                 newBlock.ship = true
-                newBlock.population = newBlock.population + 1 // Reverse the efect of moving units
+                if (prevBlock.type !== "SHIP") { // Fix: Infinite population bug
+                    newBlock.population = newBlock.population + 1 // Reverse the efect of moving units
+                }
             }
 
             // If you were in a boat and moved; remove the boat in previous block

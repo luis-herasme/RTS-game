@@ -35,6 +35,8 @@ class GameManager {
     }
 
     private update() {
+        this.clientStateManager.updateBlockSelected()
+
         this.clientStateManager.updateBlocks()
         this.fpsManager.update()
         this.scene.render()

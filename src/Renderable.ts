@@ -52,13 +52,13 @@ class Renderable {
         Renderable.context.fillStyle = "#FFFFFF"
         Renderable.context.strokeStyle = "#000"
         Renderable.context.lineWidth = Renderable.scale * 7
-        Renderable.context.font = 20 * Renderable.scale + "px 'Press Start 2P'"
+        Renderable.context.font = 20 * Renderable.scale + "px 'Arial'"
         Renderable.context.strokeText(
             String(text),
             Renderable.scale * (this.positionRelativeToCamera.x + this._size.x / 2 - BLOCK_DEFAULT_SIZE * 0.3),
             Renderable.scale * (this.positionRelativeToCamera.y + this._size.y / 2 - BLOCK_DEFAULT_SIZE * 0.2)
         )
-        Renderable.context.font = 20 * Renderable.scale + "px 'Press Start 2P'"
+        Renderable.context.font = 20 * Renderable.scale + "px 'Arial'"
         Renderable.context.fillText(
             String(text),
             Renderable.scale * (this.positionRelativeToCamera.x + this._size.x / 2 - BLOCK_DEFAULT_SIZE * 0.3),

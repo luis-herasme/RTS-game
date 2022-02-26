@@ -179,6 +179,23 @@ class EventManager {
         return this.clientStateManager.move(newBlockPosition, prevBlockPosition, this.player.name, moveHalf)
     }
 
+    // TODO: Clase MAPA que es parte de scena y es el mapa del state pueden compartir esto
+    private getBlockIfDefined(x: number, y: number): Block | null {
+        if (this.map[y]) {
+            if (this.map[y][x] !== undefined) {
+                return this.map[y][x]
+            }
+        }
+        return null
+    }
+    private moveIfBlockIsDefined(x: number, y: number): boolean {
+        const newBlock = this.getBlockIfDefined(x, y)
+        if (newBlock !== null && this.cursor.blockSelected !== null) {
+            return this.move(newBlock, this.cursor.blockSelected, this.moveHalfOfThePopuation)                    
+        }
+        return false
+    }
+
     // Cusor events 
     private listenCursorKeyboardEvents() {
         document.addEventListener("keydown", (e) => {
@@ -196,17 +213,16 @@ class EventManager {
                 let moved: boolean = false
 
                 if (key === 'arrowup') {
-
-                    moved = this.move(this.map[y - 1][x], this.cursor.blockSelected, this.moveHalfOfThePopuation)                    
+                    moved = this.moveIfBlockIsDefined(x, y - 1)
                 }
                 else if (key === 'arrowdown') {
-                    moved = this.move(this.map[y + 1][x], this.cursor.blockSelected, this.moveHalfOfThePopuation)
+                    moved = this.moveIfBlockIsDefined(x, y + 1)
                 }
                 else if (key === 'arrowright') {
-                    moved = this.move(this.map[y][x + 1], this.cursor.blockSelected, this.moveHalfOfThePopuation)
+                    moved = this.moveIfBlockIsDefined(x + 1, y)
                 }
                 else if (key === 'arrowleft') {
-                    moved = this.move(this.map[y][x - 1], this.cursor.blockSelected, this.moveHalfOfThePopuation)
+                    moved = this.moveIfBlockIsDefined(x - 1, y)
                 } else if (key === ' ') {
                     this.moveHalfOfThePopuation = true
                 }

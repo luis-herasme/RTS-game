@@ -1,6 +1,8 @@
 import Block from "../Block"
 import { BlockData, BlockPosition, PlayerData, State, Visibility } from "./stateManagementTypes"
 
+// ! This is just for initial scene, capital position is needed
+
 function blockDefined({ position: {x, y} }: BlockData, map: Array<Array<BlockData>>) {
     if (map[y]) {
         if (map[y][x]) {
@@ -82,7 +84,8 @@ function getPlayerDataFromBlock(block: Block): PlayerData {
         blocks: [], // Changes after
         canGoOnWater: false,
         blockSelected: null,
-        population: 0 // Changes after
+        population: 0, // Changes after,
+        capital: {x: block.x, y: block.y} // Changes after, // ! This is just for initial scene, capital position is needed
     }
 }
 

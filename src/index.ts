@@ -71,6 +71,7 @@ export function startGame(config: Array<playerConfiguration>) {
     const gameManager = new GameManager(scene, player, stateManager)
 
     ais.forEach(ai => ai.start())
-           
+
+    stateManager.start()
     gameManager.start()
 }

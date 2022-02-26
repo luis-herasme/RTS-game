@@ -29,7 +29,9 @@ class StateChecks extends BaseStateManager {
     // TODO: ALGO QUE PODRIA IR EN MAP
     private getBlockIfDefined(x: number, y: number): BlockData | null {
         if (this.state.map[y]) {
-            return this.state.map[y][x]
+            if (this.state.map[y][x] !== undefined) {
+                return this.state.map[y][x]
+            }
         }
         return null
     }

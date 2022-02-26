@@ -3,7 +3,28 @@ import { BlockData, BlockDataValidToAPlayer, BlockPosition, PlayerData, Visibili
 
 
 class StateManager extends PopulationGrowthSM {
-  
+
+    private updatePeriod: number = 100
+
+    public start(): void {
+        setInterval(() => {
+            this.update()
+        }, this.updatePeriod)
+    }
+
+    private update() {
+        const players: Array<PlayerData> = Array.from(this.state.players.values())
+        for (let player of players) {
+            if (player.name !== "NONE") {
+                this.checkIfAlive(player)
+            }
+
+            if (player.alive && player.blockSelected?.ownerName !== player.name) {
+                player.blockSelected = this.getBlockAt(player.capital)
+            }
+        }
+    }
+
     // API
     // TODO: Make this work with player ID, a random ID generated in the player browser 
     public getBoardState(playerName: string): Array<BlockDataValidToAPlayer> {

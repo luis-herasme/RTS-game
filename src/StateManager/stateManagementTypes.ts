@@ -61,4 +61,5 @@ export interface PlayerData {
     canGoOnWater: Boolean
     blockSelected: BlockData | null
     population: number
+    capital: BlockPosition
 }

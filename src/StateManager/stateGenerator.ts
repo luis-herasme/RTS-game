@@ -49,7 +49,8 @@ function dataFromPlayerDescription(playerDescription: PlayerDescription, map: Ar
         blocks: [map[playerDescription.capital.y][playerDescription.capital.x]],
         canGoOnWater: false,
         blockSelected: null,
-        population: 0
+        population: 0,
+        capital: playerDescription.capital
     }
 }
 

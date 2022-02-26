@@ -4,11 +4,11 @@ import { BlockPosition } from "./StateManager/stateManagementTypes"
 
 class AI extends Player {
     private stateManager: StateManager
-    private blockSelectedData: BlockPosition
+    private blockSelected: BlockPosition | null
 
     constructor(name: string, color: string, capital: BlockPosition, stateManager: StateManager) {
         super(name, color, capital)
-        this.blockSelectedData = capital
+        this.blockSelected = capital
         this.stateManager = stateManager
     }
 
@@ -16,7 +16,7 @@ class AI extends Player {
         this.stateManager.setBlockSelectedFromClick(this.name, this.capital)
         const playerData = this.stateManager.getPlayerData(this.name)
         if (playerData.blockSelected !== null) {
-            this.blockSelectedData = playerData.blockSelected.position
+            this.blockSelected = playerData.blockSelected.position
         }
 
         setInterval(() => {
@@ -52,11 +52,14 @@ class AI extends Player {
     }
 
     private move() {
-        let { x, y } = this.getNextStep()
-        x += this.blockSelectedData.x
-        y += this.blockSelectedData.y
-        if (this.stateManager.move({x, y}, this.blockSelectedData, this.name, false)) {
-            this.blockSelectedData = {x, y}
+        this.blockSelected = this.stateManager.getBlockSeletec(this.name)
+        if (this.blockSelected !== null) {
+            let { x, y } = this.getNextStep()
+            x += this.blockSelected.x
+            y += this.blockSelected.y
+            if (this.stateManager.move({x, y}, this.blockSelected, this.name, false)) {
+                this.blockSelected = {x, y}
+            }
         }
         // this.moveHelper({}, this.cursor.blockSelected, false)
     }
