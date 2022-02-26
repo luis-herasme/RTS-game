@@ -1,5 +1,5 @@
 import Player from "./Player"
-import StateManager from "./StateManager/StateManager"
+import StateManager from "./StateManager/SM/StateManager"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
 
 class AI extends Player {

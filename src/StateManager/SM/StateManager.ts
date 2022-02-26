@@ -1,5 +1,5 @@
 import PopulationGrowthSM from "./PopulationGrowthSM"
-import { BlockData, BlockDataValidToAPlayer, BlockPosition, PlayerData, Visibility } from "./stateManagementTypes"
+import { BlockData, BlockDataValidToAPlayer, BlockPosition, PlayerData, Visibility } from "../stateManagementTypes"
 
 
 class StateManager extends PopulationGrowthSM {

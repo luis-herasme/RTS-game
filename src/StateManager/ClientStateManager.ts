@@ -1,7 +1,7 @@
 import Player from "../Player"
 import Scene from "../Scene"
 import { BlockDataValidToAPlayer, BlockPosition } from "./stateManagementTypes"
-import StateManager from "./StateManager"
+import StateManager from "./SM/StateManager"
 
 class ClientStateManager {
     private player: Player

@@ -1,5 +1,5 @@
 import BaseStateManager from "./BaseStateManager"
-import { BlockData } from "./stateManagementTypes"
+import { BlockData } from "../stateManagementTypes"
 
 class StateChecks extends BaseStateManager {
 

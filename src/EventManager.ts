@@ -1,5 +1,5 @@
 import Block from "./Block"
-import StateManager from "./StateManager/StateManager"
+import StateManager from "./StateManager/SM/StateManager"
 import Camera from "./Camera"
 import { FORCE } from "./constants"
 import Cursor from "./Cursor"

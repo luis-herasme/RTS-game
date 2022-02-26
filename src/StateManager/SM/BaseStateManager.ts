@@ -1,4 +1,4 @@
-import { BlockData, BlockPosition, PlayerData, State } from "./stateManagementTypes"
+import { BlockData, BlockPosition, PlayerData, State } from "../stateManagementTypes"
 
 class BaseStateManager {
     protected state: State = {} as State

@@ -1,5 +1,5 @@
 import StateChecks from "./ChecksSM"
-import { BlockData, PlayerData, Visibility } from "./stateManagementTypes"
+import { BlockData, PlayerData, Visibility } from "../stateManagementTypes"
 
 class StateVisibility extends StateChecks {
 

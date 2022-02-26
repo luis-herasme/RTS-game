@@ -1,5 +1,5 @@
-import { NONE_PLAYER_DATA } from "../constants"
-import { BlockData, PlayerData, Visibility } from "./stateManagementTypes"
+import { NONE_PLAYER_DATA } from "../../constants"
+import { BlockData, PlayerData, Visibility } from "../stateManagementTypes"
 import StateVisibility from "./VisibilitySM"
 
 class PlayersStateManager extends StateVisibility {

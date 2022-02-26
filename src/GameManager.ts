@@ -1,5 +1,5 @@
 import ClientStateManager from "./StateManager/ClientStateManager"
-import StateManager from "./StateManager/StateManager"
+import StateManager from "./StateManager/SM/StateManager"
 import CanvasManager from "./CanvasManager"
 import EventHandler from "./EventManager"
 import Renderable from "./Renderable"

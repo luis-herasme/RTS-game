@@ -3,8 +3,8 @@ import GameManager from "./GameManager"
 import Player from "./Player"
 import AI from "./AI"
 import Scene from "./Scene"
-import { generateStateFromScene } from "./generateStateFromScene"
-import StateManager from "./StateManager/StateManager"
+import { generateStateFromScene } from "./StateManager/generateStateFromScene"
+import StateManager from "./StateManager/SM/StateManager"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
 
 

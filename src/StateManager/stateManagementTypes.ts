@@ -1,4 +1,15 @@
 
+export interface PlayerDescription {
+    name: string,
+    color: string,
+    capital: BlockPosition
+}
+
+export interface StateDescriptor {
+    map: Array<Array<string>>
+    players: Array<PlayerDescription>
+}
+
 export enum Visibility {
     hidden,
     visible

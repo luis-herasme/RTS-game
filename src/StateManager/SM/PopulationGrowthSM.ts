@@ -1,6 +1,6 @@
-import { NONE_PLAYER_DATA } from "../constants"
+import { NONE_PLAYER_DATA } from "../../constants"
 import Move from "./MoveSM"
-import { BlockData, PlayerData, Visibility } from "./stateManagementTypes"
+import { BlockData, PlayerData, Visibility } from "../stateManagementTypes"
 
 
 class PopulationGrowthSM extends Move {

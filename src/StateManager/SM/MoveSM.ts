@@ -1,6 +1,6 @@
-import { NONE_PLAYER_DATA } from "../constants"
+import { NONE_PLAYER_DATA } from "../../constants"
 import PlayersStateManager from "./PlayerSM"
-import { BlockData, BlockPosition, PlayerData, Visibility } from "./stateManagementTypes"
+import { BlockData, BlockPosition, PlayerData, Visibility } from "../stateManagementTypes"
 
 class Move extends PlayersStateManager {
 
