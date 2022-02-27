@@ -108,33 +108,45 @@ function generateMapStateFromMap(map: Array<Array<Block>>) {
     return mapState
 }
 
-function generatePlayersStateFromMap(map: Array<Array<Block>>): Map<string, PlayerData> {
-
-    const playersBlocksData = new Map<string, Array<BlockData>>()
-    const playersData = new Map<string, PlayerData>()
-
+function getAllPlayersInTheScene(map: Array<Array<Block>>): Array<string> {
+    const players: Array<string> = []
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             const block = map[y][x]
+            players.push(block.owner.name)
+        }
+    }
+    return [...new Set(players)]
+}
 
-            if (!playersData.get(block.owner.name)) {
-                playersData.set(block.owner.name, getPlayerDataFromBlock(block))
+function generatePlayersStateFromMap(mapState: Array<Array<BlockData>>, map: Array<Array<Block>>): Map<string, PlayerData> {
+
+    // const playersNames: Array<string> = getAllPlayersInTheScene(map)
+    const playersBlocksData = new Map<string, Array<BlockData>>()
+    const playersData = new Map<string, PlayerData>()
+
+    for (let y = 0; y < mapState.length; y++) {
+        for (let x = 0; x < mapState[y].length; x++) {
+            const blockData = mapState[y][x]
+
+            if (!playersData.get(blockData.ownerName)) {
+                playersData.set(blockData.ownerName, getPlayerDataFromBlock(map[y][x]))
             }
 
-            if (!playersBlocksData.get(block.owner.name)) {
-                playersBlocksData.set(block.owner.name, [])
+            if (!playersBlocksData.get(blockData.ownerName)) {
+                playersBlocksData.set(blockData.ownerName, [])
             }
 
-            const player: Array<BlockData> | undefined = playersBlocksData.get(block.owner.name)
-            if (player === undefined) {
+            const playerBlocksData: Array<BlockData> | undefined = playersBlocksData.get(blockData.ownerName)
+            if (playerBlocksData === undefined) {
                 throw Error("Player block data is not defined for this player, (An empty array is needed).")
             }
-            player.push(getBlockData(block))
+            playerBlocksData.push(blockData)
         }
     }
 
-    for (let playerBlocksData of Object.values(playersBlocksData)) {
-        const playerName = playerBlocksData[0].name
+    for (let playerBlocksData of playersBlocksData.values()) {
+        const playerName = playerBlocksData[0].ownerName
         const playerData: PlayerData | undefined = playersData.get(playerName)
 
         if (playerData === undefined) {
@@ -150,7 +162,7 @@ function generatePlayersStateFromMap(map: Array<Array<Block>>): Map<string, Play
 
 export function generateStateFromScene(map: Array<Array<Block>>): State {
     const mapState: Array<Array<BlockData>> = generateMapStateFromMap(map)
-    const playersState: Map<string, PlayerData> = generatePlayersStateFromMap(map)
+    const playersState: Map<string, PlayerData> = generatePlayersStateFromMap(mapState, map)
 
     const playersNameList: Array<string> = Array.from(playersState.keys())
 

@@ -12,7 +12,7 @@ class PlayersStateManager extends StateVisibility {
         return blockSelected
     }
 
-    private removeBlock(block: BlockData, player: PlayerData): void {
+    protected removeBlock(block: BlockData, player: PlayerData): void {
         if (player.name != NONE_PLAYER_DATA.name) {
             player.blocks = player.blocks.filter(x => x !== block)
             block.previousOwnerName = player.name
@@ -27,15 +27,15 @@ class PlayersStateManager extends StateVisibility {
             this.removeBlock(block, this.getPlayerData(block.ownerName))
         }
 
-        if (!this.isWater(block)) {
+        // if (!this.isWater(block)) {
             player.blocks.push(block)
-        }
+        // }
 
         block.ownerName = player.name
         this.setSurroundingsVisibility(block, Visibility.visible, player)
     }
 
-    public checkIfAlive(player: PlayerData): void {
+    public updateAlive(player: PlayerData): void {
         const capital: BlockData = this.getBlockAt(player.capital)
 
         if (capital.ownerName !== player.name) {

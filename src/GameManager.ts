@@ -24,7 +24,7 @@ class GameManager {
         this.player = player
         this.canvasManager = new CanvasManager()
         this.fpsManager = new FPS()
-        this.uiManager = new UI()
+        this.uiManager = new UI(stateManager, this.player.name)
         this.camera = new Camera(scene)
         this.clientStateManager = new ClientStateManager(player, scene, stateManager)
         this.eventManager = new EventHandler(scene.map, player.cursor, this.camera, player, this.clientStateManager)
@@ -34,10 +34,42 @@ class GameManager {
         this.camera.setCenterAtBlock(capital)
     }
 
+    private winPresented: boolean = false
+
     private update() {
+        
+
+
+        /// clientStateManager neeed a start 
+        
+        
         this.clientStateManager.updateBlockSelected()
 
         this.clientStateManager.updateBlocks()
+
+
+        const winner: string | null = this.clientStateManager.getWinner()
+        if (winner !== null && !this.winPresented) {
+            if (winner == this.player.name) {
+                alert(`YOU WIN!`)    
+            } else {
+                alert(`You lost, ${winner} won!`)
+            }
+            this.winPresented = true
+        }
+
+
+        // Check if alive
+        const alive: boolean = this.clientStateManager.checkIfAlive(this.player.name)
+
+        if (!alive && this.player.alive) {
+            alert(`You lost!`)
+            this.player.alive = false
+        }
+
+
+
+
         this.fpsManager.update()
         this.scene.render()
         this.player.cursor.render()

@@ -114,10 +114,9 @@ class Move extends PlayersStateManager {
     }
 
     private clearBlock(block: BlockData, player: PlayerData): void {
+        this.removeBlock(block, player)
         block.population = 0
         block.ownerName = NONE_PLAYER_DATA.name
-        block.previousOwnerName = player.name
-        this.setSurroundingsVisibility(block, Visibility.hidden, player)
     }
 }
 

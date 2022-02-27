@@ -42,7 +42,7 @@ export function startGame(config: Array<playerConfiguration>) {
     const player = new Player(config[0].name, config[0].color, positions[0])
     const capital = scene.getBlockAt(positions[0].x, positions[0].y)
     capital.owner = player
-    capital.population = 1000
+    capital.population = 100
 
     const ais = []
 
@@ -57,7 +57,7 @@ export function startGame(config: Array<playerConfiguration>) {
             positions[i],
             stateManager
         )
-
+        capital.population = 5
         capital.owner = ai
 
         ais.push(ai)

@@ -63,3 +63,10 @@ export interface PlayerData {
     population: number
     capital: BlockPosition
 }
+
+export interface PlayerDisplayData {
+    name: string
+    population: number
+    color: string
+    territories: number
+}

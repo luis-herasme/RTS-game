@@ -3,13 +3,8 @@ import Cursor from "./Cursor"
 import FPS from "./FPSManager"
 import Player from "./Player"
 import Scene from "./Scene"
-
-interface playerDisplayData {
-    name: string;
-    population: number;
-    color: string;
-    territories: number;
-}
+import StateManager from "./StateManager/SM/StateManager"
+import { PlayerDisplayData } from "./StateManager/stateManagementTypes"
 
 class UI {
     private population: HTMLElement | null
@@ -17,13 +12,17 @@ class UI {
     private updateRate: number
     private playersLeaderBoard: HTMLElement | null
     private fps: HTMLElement | null
+    private stateManager: StateManager
+    private playerName: string
 
-    constructor(updateRate: number = 1000) {
+    constructor(stateManager: StateManager, playerName: string, updateRate: number = 1000) {
         this.population = document.getElementById("population")
         this.levelUpButton = document.getElementById("levelUp")        
         this.playersLeaderBoard = document.getElementById("playersLeaderBoard")
         this.fps = document.getElementById("FPS")
         this.updateRate = updateRate
+        this.stateManager = stateManager
+        this.playerName = playerName
     }
 
     public start(scene: Scene, cursor: Cursor) {
@@ -32,9 +31,9 @@ class UI {
             this.updateFPS()
         }, 50)
         setInterval(() => {
-            this.updatePopulationText(scene)
+            // this.updatePopulationText(scene)
             this.updateLevelUpButtonVisibility(cursor)
-            this.updateLeaderBoard(scene)
+            this.updateLeaderBoardAndPopulation()
         }, this.updateRate)
     }
 
@@ -46,58 +45,36 @@ class UI {
         }
     }
 
-    public updateLeaderBoard(scene: Scene) {
-        // const players: Array<playerDisplayData> = []
+    public updateLeaderBoardAndPopulation() {
+        const playersDisplayData: Array<PlayerDisplayData> = this.stateManager.getLeaderBoard()
+        let leaderBoard = ""
+        playersDisplayData.sort((p1: PlayerDisplayData, p2: PlayerDisplayData) => {
+            return p2.population - p1.population
+        })
 
-        // scene.players.forEach((player: Player)=> {
-        //     const playerData: playerDisplayData = {
-        //         name: player.name,
-        //         // color: this.RGBAToRGB(player.color),
-        //         color: player.color,
-        //         territories: 0,// player.blocks.length,
-        //         population: 0
-        //     }
-        //     players.push(playerData)
-        // })
-
-        // scene.eachBlock((block) => {
-        //     for (let player of players) {
-        //         if (block.owner.name == player.name) {
-        //             player.population += block.population
-        //         }
-        //     }
-        // })
-
-        // let leaderBoard = ""
-
-        // const playersList = Object.values(players)
-        // playersList.sort((p1, p2) => {
-        //     return p2.population - p1.population
-        // })
-
-        // for (let player of playersList) {
-        //     leaderBoard += `
-        //         <p style="color: ${player.color}; text-decoration: ${player.population? "none": "line-through"};">${player.name}: ${player.population} POP,  ${player.territories} Territories</p>
-        //     `
-        // }
-
-        // this.playersLeaderBoard.innerHTML = leaderBoard
+        for (let player of playersDisplayData) {
+            
+            leaderBoard += `
+                <p style="color: ${player.color}; text-decoration: ${player.population? "none": "line-through"};">${player.name}: ${player.population} POP,  ${player.territories} Territories</p>
+            `
+            
+            if (player.name == this.playerName) {
+                this.setPopulation(player.population)
+            }
+        }
+        if (this.playersLeaderBoard !== null) {
+            this.playersLeaderBoard.innerHTML = leaderBoard
+        } else {
+            throw Error("PlayersLeaderBoard HTML Element is not defined.")
+        }
     }
 
     // Start updating population text
-    public updatePopulationText(scene: Scene) {
+    public setPopulation(population: number) {
         if (this.population == null) {
             throw Error("population DOM element not defined.")
         }
-
-        let totalPopulation = 0
-        scene.eachBlock((block: Block) => {
-            if (block.owner.name == "Luis") {
-                totalPopulation += block.population
-            }
-        })
-
-        this.population.innerText = `Population: ${totalPopulation}`
+        this.population.innerText = `Population: ${population}`
     }
 
     public RGBAToRGB(rgba: string): string {

@@ -16,7 +16,6 @@ class ClientStateManager {
 
     public updateBlocks() {
         const newState: Array<BlockDataValidToAPlayer> = this.stateManager.getBoardState(this.player.name)
-        // console.log("newState: ", newState)
         for (let blockNewData of newState) {
             const block = this.scene.getBlockAt(blockNewData.position.x, blockNewData.position.y)
             block.updateState(blockNewData)
@@ -37,6 +36,14 @@ class ClientStateManager {
 
     public setBlockSelectedFromClick(playerName: string, blockPosition: BlockPosition): boolean {
         return this.stateManager.setBlockSelectedFromClick(playerName, blockPosition)
+    }
+
+    public getWinner(): string | null {
+        return this.stateManager.getWinner()
+    }
+
+    public checkIfAlive(playerName: string): boolean {
+        return this.stateManager.checkIfAlive(playerName)
     }
 }
 

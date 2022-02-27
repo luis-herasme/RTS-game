@@ -8,6 +8,8 @@ class BaseStateManager {
         if (!this.stateSetted) {
             this.state = state
             this.stateSetted = true
+
+            console.log("State loaded: ", this.state)
         }
     }
 
