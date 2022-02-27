@@ -136,7 +136,15 @@ export function ConfigureGameWindow(): JSX.Element {
         })
     }
 
-    const userName = "Luis"
+
+
+    let userName: string
+    const nameSaved = localStorage.getItem('user_name')
+    if (nameSaved == null) {
+        userName = "Anonimus"
+    } else {
+        userName = nameSaved
+    }
 
     useEffect(() => {
         const mainPlayer = createPlayer(userName, findRandomValidColor(players), players)

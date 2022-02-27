@@ -3,8 +3,9 @@ import Cursor from "./Cursor"
 import FPS from "./FPSManager"
 import Player from "./Player"
 import Scene from "./Scene"
+import Settlement from "./Settlement"
 import StateManager from "./StateManager/SM/StateManager"
-import { PlayerDisplayData } from "./StateManager/stateManagementTypes"
+import { BlockPosition, PlayerDisplayData } from "./StateManager/stateManagementTypes"
 
 class UI {
     private population: HTMLElement | null
@@ -15,7 +16,7 @@ class UI {
     private stateManager: StateManager
     private playerName: string
 
-    constructor(stateManager: StateManager, playerName: string, updateRate: number = 1000) {
+    constructor(stateManager: StateManager, playerName: string, updateRate: number = 500) {
         this.population = document.getElementById("population")
         this.levelUpButton = document.getElementById("levelUp")        
         this.playersLeaderBoard = document.getElementById("playersLeaderBoard")
@@ -26,7 +27,7 @@ class UI {
     }
 
     public start(scene: Scene, cursor: Cursor) {
-        this.startLevelUpOnClickEvent(cursor)
+        this.startLevelUpOnClickEvent()
         setInterval(() => {
             this.updateFPS()
         }, 50)
@@ -84,7 +85,19 @@ class UI {
         return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"
     }
 
-    public startLevelUpOnClickEvent(cursor: Cursor) {
+    public startLevelUpOnClickEvent() {
+        if (this.levelUpButton !== null) {
+            this.levelUpButton.onclick = () => {
+                const block: BlockPosition | null = this.stateManager.getBlockSeletec(this.playerName)
+                console.log("HICISTE CLICK EN LEVEL UP, block: ", block)
+                if (block !== null) {
+                    console.log("Leveling up from ui")
+                    this.stateManager.levelUpBlock(block)
+                }
+            }
+        } else {
+            console.warn("Level up button element html is not defined.")
+        }
         // this.levelUpButton.onclick = () => {
         //     if (cursor.blockSelected) {
         //         if ((cursor.blockSelected.level !== undefined) && (cursor.blockSelected.owner)) {
@@ -108,7 +121,7 @@ class UI {
             throw Error("LevelUpButton DOM element not defined.")
         }
         if (cursor.blockSelected) {
-            if (cursor.blockSelected.level !== undefined) {
+            if (Settlement.isSettlement(cursor.blockSelected)) {
                 if (
                     (cursor.blockSelected.owner) &&
                     (cursor.blockSelected.level < 3) &&

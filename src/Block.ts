@@ -1,7 +1,7 @@
 import Player from "./Player"
 import Vector from "./Vector"
 import Renderable from "./Renderable"
-import { getTextureAtlasPosition, isTextureDefined, NONE_PLAYER, SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP } from "./constants"
+import { isTextureDefined, NONE_PLAYER } from "./constants"
 import { BlockDataValidToAPlayer, Visibility } from "./StateManager/stateManagementTypes"
 
 class Block extends Renderable {
@@ -36,10 +36,13 @@ class Block extends Renderable {
         return 0
     }
 
+    public set level(value: number) {
+    }
+
     public updateState(data: BlockDataValidToAPlayer): void {
         this.population = data.population
         this.ownerName = data.ownerName
-        // this.level = data.level
+        this.level = data.level
         this.ship = data.ship
         this.visibility = data.visibility
 
@@ -64,27 +67,13 @@ class Block extends Renderable {
         }
     }
 
-    private isWater(): boolean {
-        return (this.type[0] == "W")
-    }
-
     public render(): void | null {
 
-       
-
-        // if (this.toDraw == false) {
-        //     this.visibility = Visibility.hidden
-        // } else {
-        //     this.toDraw = false
-        //     this.seen = true
-        //     this.typeSeen = this.type
-        // }
 
         if (this.visibility == Visibility.hidden) {
             // If this tile has been seen draw a block 
             if (this.seen) {
                 this.drawTile(this.typeSeen)
-                // if (SPRITE_NAME_TO_SPRITE_POSITION_IN_TILE_MAP[this.typeSeen + "_L2"]) {
                 if (isTextureDefined(this.typeSeen + "_L2")) {
                     this.drawTile(this.typeSeen + "_L2")
                 }

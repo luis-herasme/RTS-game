@@ -34,6 +34,15 @@ class Settlement extends Block {
             this._level = prev_level
         }
     }
+
+    public static isSettlement(block: Block): boolean {
+        return (
+            (block.type == "H") ||
+            (block.type == "TOWER_LEVEL_1") ||
+            (block.type == "TOWER_LEVEL_2") ||
+            (block.type == "TOWER_LEVEL_3")
+        )
+    }
 }
 
 export default Settlement

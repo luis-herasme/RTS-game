@@ -133,6 +133,25 @@ class StateManager extends PopulationGrowthSM {
             canBeConquer: block.canBeConquer
         }
     }
+
+    private BLOCK_MAX_LEVE: number = 3
+
+    public levelUpBlock(blockPosition: BlockPosition): void {
+        const block: BlockData = this.getBlockAt(blockPosition)
+        if (this.isSettlement(block)) {
+            if (block.level == this.BLOCK_MAX_LEVE) {
+                console.warn("Block cannot level up it is in the max level.")
+            } else {
+                if (block.population > 10 * block.level + 10) {
+                    block.population = block.population - (10 * block.level + 10)
+                    block.level = block.level + 1
+                } else {
+                    console.log("You need more than: ", 10 * block.level + 10, " units in this block.")
+                }
+            }
+        }
+    }
+
 }
 
 export default StateManager
