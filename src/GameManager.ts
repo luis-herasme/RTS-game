@@ -2,7 +2,6 @@ import ClientStateManager from "./StateManager/ClientStateManager"
 import StateManager from "./StateManager/SM/StateManager"
 import CanvasManager from "./CanvasManager"
 import EventHandler from "./EventManager"
-import Renderable from "./Renderable"
 import Camera from "./Camera"
 import FPS from "./FPSManager"
 import Player from "./Player"
@@ -24,9 +23,9 @@ class GameManager {
         this.player = player
         this.canvasManager = new CanvasManager()
         this.fpsManager = new FPS()
-        this.uiManager = new UI(stateManager, this.player.name)
         this.camera = new Camera(scene)
         this.clientStateManager = new ClientStateManager(player, scene, stateManager)
+        this.uiManager = new UI(this.clientStateManager, this.player.name)
         this.eventManager = new EventHandler(scene.map, player.cursor, this.camera, player, this.clientStateManager)
 
         // set camera initial position to player capital position
@@ -36,18 +35,7 @@ class GameManager {
 
     private winPresented: boolean = false
 
-    private update() {
-        
-
-
-        /// clientStateManager neeed a start 
-        
-        
-        this.clientStateManager.updateBlockSelected()
-
-        this.clientStateManager.updateBlocks()
-
-
+    private checkIfWin() {
         const winner: string | null = this.clientStateManager.getWinner()
         if (winner !== null && !this.winPresented) {
             if (winner == this.player.name) {
@@ -57,19 +45,21 @@ class GameManager {
             }
             this.winPresented = true
         }
+    }
 
-
-        // Check if alive
+    private checkIfLost() {
         const alive: boolean = this.clientStateManager.checkIfAlive(this.player.name)
 
         if (!alive && this.player.alive) {
             alert(`You lost!`)
             this.player.alive = false
         }
+    }
 
-
-
-
+    private update() {
+        this.checkIfWin()
+        this.checkIfLost()
+        this.clientStateManager.update()
         this.fpsManager.update()
         this.scene.render()
         this.player.cursor.render()
@@ -78,11 +68,8 @@ class GameManager {
     }
 
     public start(): void {
-        this.uiManager.start(this.scene, this.player.cursor)
+        this.uiManager.start(this.player.cursor)
         requestAnimationFrame(() => this.update())
-        // setInterval(() => {
-        //     this.update()
-        // }, 0)
     }
 }
 

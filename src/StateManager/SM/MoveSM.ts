@@ -10,10 +10,12 @@ class Move extends PlayersStateManager {
             return false
         }
 
-        const newBlock: BlockData = this.getBlockAt(newBlockPosition)
-        const prevBlock: BlockData = this.getBlockAt(prevBlockPosition)
+        const newBlock: BlockData | null = this.getBlockAt(newBlockPosition)
+        const prevBlock: BlockData | null = this.getBlockAt(prevBlockPosition)
         const player: PlayerData = this.getPlayerData(playerName)
-    
+        if (newBlock == null || prevBlock == null) {
+            return false
+        }
         return this.moveHelper(newBlock, prevBlock, player, moveHalf)
     }
 
@@ -118,6 +120,6 @@ class Move extends PlayersStateManager {
         block.population = 0
         block.ownerName = NONE_PLAYER_DATA.name
     }
-}
+}   
 
 export default Move

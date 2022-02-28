@@ -14,18 +14,14 @@ class AI extends Player {
 
     public start() {
         this.stateManager.setBlockSelectedFromClick(this.name, this.capital)
+
         const playerData = this.stateManager.getPlayerData(this.name)
         if (playerData.blockSelected !== null) {
             this.blockSelected = playerData.blockSelected.position
         }
 
         setInterval(() => {
-            // this.checkIfAlive() //! CAMBIAR ESTO
             if (this.alive) {
-                // if (this.cursor.blockSelected.owner.name !== this.name) {
-                    // this.stateManager.setBlockSelectedFromClick(this.name, this.capital)
-                    // this.cursor.blockSelected = this.capital
-                // }
                 this.move()
             }
         }, 100)
@@ -51,7 +47,7 @@ class AI extends Player {
         return { x, y }
     }
 
-    private move() {
+    private move(): void {
         this.blockSelected = this.stateManager.getBlockSeletec(this.name)
         if (this.blockSelected !== null) {
             let { x, y } = this.getNextStep()
@@ -61,7 +57,6 @@ class AI extends Player {
                 this.blockSelected = {x, y}
             }
         }
-        // this.moveHelper({}, this.cursor.blockSelected, false)
     }
 }
 

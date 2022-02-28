@@ -1,28 +1,21 @@
-import Player from "./Player"
 import Vector from "./Vector"
 import Renderable from "./Renderable"
 import { isTextureDefined, NONE_PLAYER } from "./constants"
 import { BlockDataValidToAPlayer, Visibility } from "./StateManager/stateManagementTypes"
 
 class Block extends Renderable {
-
+    public ownerName: string = NONE_PLAYER.name
+    public population: number = 0
     public absolutePosition: Vector
     public x: number
     public y: number
     public type: string
+    public ship: boolean = false
 
     // Visibility
-    public seen: boolean = false
-    public typeSeen: string = ""
-    public visibility: Visibility = Visibility.hidden
-
-    // Conquer block
-    public canBeConquer: boolean = true
-    public population: number = 0
-
-    public owner: Player = NONE_PLAYER
-    public ownerName: string = ""
-    public ship: boolean = false
+    private seen: boolean = false
+    private typeSeen: string = ""
+    private visibility: Visibility = Visibility.hidden
 
     constructor(position: Vector, size: Vector, x: number, y: number, type: string) {
         super(position, size)
@@ -36,17 +29,16 @@ class Block extends Renderable {
         return 0
     }
 
-    public set level(value: number) {
-    }
+    public set level(value: number) { }
 
     public updateState(data: BlockDataValidToAPlayer): void {
-        this.population = data.population
         this.ownerName = data.ownerName
+        this.population = data.population
         this.level = data.level
         this.ship = data.ship
         this.visibility = data.visibility
 
-        if (data.ownerName !== "NONE") {
+        if (data.ownerName !== NONE_PLAYER.name) {
             this.color = data.color
         } else {
             this.color = ""
@@ -68,8 +60,6 @@ class Block extends Renderable {
     }
 
     public render(): void | null {
-
-
         if (this.visibility == Visibility.hidden) {
             // If this tile has been seen draw a block 
             if (this.seen) {
@@ -83,12 +73,11 @@ class Block extends Renderable {
         }
         else {
             // Draw the sprite of this block type
-            if (this.owner.name == "NONE") {  //* TEMPORAL MEDIR RENDIMIENTO
+            if (this.ownerName == NONE_PLAYER.name) {
                 this.drawTile(this.type)
             }
             // If the block has a owner draw a rect with the owner color
-            // if (this.owner.name !== "NONE") {
-            if (this.color) {
+            if (this.color && this.ownerName !== NONE_PLAYER.name) {
                 this.drawRect(false)
             }
 

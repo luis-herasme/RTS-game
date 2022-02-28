@@ -56,11 +56,21 @@ export function setVisibility(map: Array<Array<BlockData>>, playersNameList: Arr
     }
 }
 
+function canBeConquer(block: Block): boolean {
+    if (block.type[0] === "W") { // Water type
+        return false
+    } else if (block.type == "MOUNTAIN") { // Mountain
+        return false
+    } else {
+        return true
+    }
+}
+
 function getBlockData(block: Block): BlockData {
     const visibility = new Map<string, Visibility>()
-    visibility.set(block.owner.name, Visibility.visible)
+    visibility.set(block.ownerName, Visibility.visible)
     return {
-        ownerName: block.owner.name,
+        ownerName: block.ownerName,
         previousOwnerName: "NONE",
         position: {
             x: block.x,
@@ -71,16 +81,16 @@ function getBlockData(block: Block): BlockData {
         level: block.level,
         ship: block.ship,
         visibility: visibility,
-        canBeConquer: block.canBeConquer,
+        canBeConquer: canBeConquer(block),
         dirty: true
     }
 }
 
 function getPlayerDataFromBlock(block: Block): PlayerData {
     return {
-        name: block.owner.name,
-        alive: block.owner.alive,
-        color: block.owner.color,
+        name: block.ownerName,
+        alive: true, // If he has a block he must be alive
+        color: block.color,
         blocks: [], // Changes after
         canGoOnWater: false,
         blockSelected: null,
@@ -113,7 +123,7 @@ function getAllPlayersInTheScene(map: Array<Array<Block>>): Array<string> {
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
             const block = map[y][x]
-            players.push(block.owner.name)
+            players.push(block.ownerName)
         }
     }
     return [...new Set(players)]

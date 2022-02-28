@@ -52,6 +52,10 @@ class StateManager extends PopulationGrowthSM {
 
     public setBlockSelectedFromClick(playerName: string, blockPosition: BlockPosition): boolean {
         const block = this.getBlockAt(blockPosition)
+        if (block == null) {
+            console.warn("Block to be set as block selected is not defined.")
+            return false
+        }
         if (block.ownerName == playerName) {
             this.setBlockSelected(block, this.getPlayerData(playerName))
             return true
@@ -137,7 +141,13 @@ class StateManager extends PopulationGrowthSM {
     private BLOCK_MAX_LEVE: number = 3
 
     public levelUpBlock(blockPosition: BlockPosition): void {
-        const block: BlockData = this.getBlockAt(blockPosition)
+        const block: BlockData | null = this.getBlockAt(blockPosition)
+
+        if (block == null) {
+            console.warn('Block to level up is no defined in the map.')
+            return
+        }
+
         if (this.isSettlement(block)) {
             if (block.level == this.BLOCK_MAX_LEVE) {
                 console.warn("Block cannot level up it is in the max level.")

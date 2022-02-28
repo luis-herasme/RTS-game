@@ -17,7 +17,7 @@ class BaseStateManager {
         const player: PlayerData | undefined = this.state.players.get(playerName)
 
         if (player == undefined) {
-            throw Error("playerName provided is not defined in the state.")
+            throw Error("playerName provided is not defined in the state. playerName provided: " + playerName)
         }
 
         return player
@@ -34,8 +34,11 @@ class BaseStateManager {
     }
 
     // TODO: ALGO QUE PODRIA IR EN MAP
-    protected getBlockAt(position: BlockPosition): BlockData {
-        return this.state.map[position.y][position.x]
+    protected getBlockAt(position: BlockPosition): BlockData | null {
+        if (this.validPosition(position)) {
+            return this.state.map[position.y][position.x]
+        }
+        return null
     }
 
     // TODO: ALGO QUE PODRIA IR EN MAP

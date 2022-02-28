@@ -1,6 +1,6 @@
 import Player from "../Player"
 import Scene from "../Scene"
-import { BlockDataValidToAPlayer, BlockPosition } from "./stateManagementTypes"
+import { BlockDataValidToAPlayer, BlockPosition, PlayerDisplayData } from "./stateManagementTypes"
 import StateManager from "./SM/StateManager"
 
 class ClientStateManager {
@@ -14,12 +14,28 @@ class ClientStateManager {
         this.stateManager = stateManager
     }
 
+    public update() {
+        this.updateBlockSelected()
+        this.updateBlocks()
+    }
+
     public updateBlocks() {
         const newState: Array<BlockDataValidToAPlayer> = this.stateManager.getBoardState(this.player.name)
         for (let blockNewData of newState) {
             const block = this.scene.getBlockAt(blockNewData.position.x, blockNewData.position.y)
             block.updateState(blockNewData)
         }
+    }
+
+    public levelUpBlockSelected(playerName: string): void {
+        const block: BlockPosition | null = this.stateManager.getBlockSeletec(playerName)
+        if (block !== null) {
+            this.stateManager.levelUpBlock(block)
+        }
+    }
+
+    public getLeaderBoard(): Array<PlayerDisplayData> {
+        return this.stateManager.getLeaderBoard()
     }
 
     public updateBlockSelected() {

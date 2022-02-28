@@ -1,5 +1,4 @@
 import Block from "./Block"
-import { BlockData } from "./StateManager/stateManagementTypes"
 import Vector from "./Vector"
 
 class Settlement extends Block {

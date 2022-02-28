@@ -1,11 +1,9 @@
-import Block from "./Block"
+import { NONE_PLAYER } from "./constants"
 import Cursor from "./Cursor"
 import FPS from "./FPSManager"
-import Player from "./Player"
-import Scene from "./Scene"
 import Settlement from "./Settlement"
-import StateManager from "./StateManager/SM/StateManager"
-import { BlockPosition, PlayerDisplayData } from "./StateManager/stateManagementTypes"
+import ClientStateManager from "./StateManager/ClientStateManager"
+import { PlayerDisplayData } from "./StateManager/stateManagementTypes"
 
 class UI {
     private population: HTMLElement | null
@@ -13,32 +11,31 @@ class UI {
     private updateRate: number
     private playersLeaderBoard: HTMLElement | null
     private fps: HTMLElement | null
-    private stateManager: StateManager
+    private clientStateManager: ClientStateManager
     private playerName: string
 
-    constructor(stateManager: StateManager, playerName: string, updateRate: number = 500) {
+    constructor(clientStateManager: ClientStateManager, playerName: string, updateRate: number = 500) {
         this.population = document.getElementById("population")
         this.levelUpButton = document.getElementById("levelUp")        
         this.playersLeaderBoard = document.getElementById("playersLeaderBoard")
         this.fps = document.getElementById("FPS")
         this.updateRate = updateRate
-        this.stateManager = stateManager
+        this.clientStateManager = clientStateManager
         this.playerName = playerName
     }
 
-    public start(scene: Scene, cursor: Cursor) {
+    public start(cursor: Cursor) {
         this.startLevelUpOnClickEvent()
         setInterval(() => {
             this.updateFPS()
         }, 50)
         setInterval(() => {
-            // this.updatePopulationText(scene)
             this.updateLevelUpButtonVisibility(cursor)
             this.updateLeaderBoardAndPopulation()
         }, this.updateRate)
     }
 
-    public updateFPS(): void {
+    private updateFPS(): void {
         if (this.fps !== null) {
             this.fps.innerText = "FPS: " + (1000/FPS.frameTime).toFixed(1)
         } else {
@@ -46,12 +43,10 @@ class UI {
         }
     }
 
-    public updateLeaderBoardAndPopulation() {
-        const playersDisplayData: Array<PlayerDisplayData> = this.stateManager.getLeaderBoard()
+    private updateLeaderBoardAndPopulation() {
+        const playersDisplayData: Array<PlayerDisplayData> = this.clientStateManager.getLeaderBoard()
         let leaderBoard = ""
-        playersDisplayData.sort((p1: PlayerDisplayData, p2: PlayerDisplayData) => {
-            return p2.population - p1.population
-        })
+        playersDisplayData.sort((p1: PlayerDisplayData, p2: PlayerDisplayData) => p2.population - p1.population)
 
         for (let player of playersDisplayData) {
             
@@ -88,32 +83,11 @@ class UI {
     public startLevelUpOnClickEvent() {
         if (this.levelUpButton !== null) {
             this.levelUpButton.onclick = () => {
-                const block: BlockPosition | null = this.stateManager.getBlockSeletec(this.playerName)
-                console.log("HICISTE CLICK EN LEVEL UP, block: ", block)
-                if (block !== null) {
-                    console.log("Leveling up from ui")
-                    this.stateManager.levelUpBlock(block)
-                }
+                this.clientStateManager.levelUpBlockSelected(this.playerName)
             }
         } else {
             console.warn("Level up button element html is not defined.")
         }
-        // this.levelUpButton.onclick = () => {
-        //     if (cursor.blockSelected) {
-        //         if ((cursor.blockSelected.level !== undefined) && (cursor.blockSelected.owner)) {
-        //             if (cursor.blockSelected.level == 3) {
-        //                 console.log("You are in the max level")
-        //             } else {
-        //                 if (cursor.blockSelected.population > 10 * cursor.blockSelected.level + 10) {
-        //                     cursor.blockSelected.population = cursor.blockSelected.population - (10 * cursor.blockSelected.level + 10)
-        //                     cursor.blockSelected.level = cursor.blockSelected.level + 1
-        //                 } else {
-        //                     console.log("You need more than: ", 10 * cursor.blockSelected.level + 10, " units in this block.")
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     public updateLevelUpButtonVisibility(cursor: Cursor) {
@@ -123,7 +97,7 @@ class UI {
         if (cursor.blockSelected) {
             if (Settlement.isSettlement(cursor.blockSelected)) {
                 if (
-                    (cursor.blockSelected.owner) &&
+                    (cursor.blockSelected.ownerName !== NONE_PLAYER.name) &&
                     (cursor.blockSelected.level < 3) &&
                     (cursor.blockSelected.population > 10 * cursor.blockSelected.level + 10)
                 ) {

@@ -1,5 +1,4 @@
 import Block from "./Block"
-import StateManager from "./StateManager/SM/StateManager"
 import Camera from "./Camera"
 import { FORCE } from "./constants"
 import Cursor from "./Cursor"
@@ -7,7 +6,6 @@ import Player from "./Player"
 import Renderable from "./Renderable"
 import Vector from "./Vector"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
-import GameManager from "./GameManager"
 import ClientStateManager from "./StateManager/ClientStateManager"
 
 /**
@@ -22,7 +20,7 @@ class EventManager {
     private cameraDisplacementAfterDrag: number = 0
     private clickDuration: number = 0
     private clientStateManager: ClientStateManager
-    // private gameManager: GameManager
+    private moveHalfOfThePopuation: boolean = false
 
     constructor(map: Array<Array<Block>>, cursor: Cursor, camera: Camera, player: Player, clientStateManager: ClientStateManager) {
         this.map = map
@@ -30,14 +28,13 @@ class EventManager {
         this.player = player
         this.camera = camera
         this.clientStateManager = clientStateManager
-        // this.gameManager = gameManager
-
         this.start()
     }
 
     public start(): void {
         this.listenCameraMovementEvents()
-        this.listenBlockClick() // This must be after listeCameraMovementEvents.
+        // listenBlockClick must be after listeCameraMovementEvents
+        this.listenBlockClick()
         this.listenCursorKeyboardEvents()
     }
 
@@ -144,7 +141,7 @@ class EventManager {
                 mapRow.forEach(block => {
                     if (mousePosition.isInsideBlock(block)) {
                         if ((this.cameraDisplacementAfterDrag < Renderable.scale * 10) && (this.clickDuration > 5)) {
-                            if (block.ownerName == this.player.name ) {
+                            if (block.ownerName == this.player.name) {
 
                                 const blockPosition: BlockPosition = {
                                     x: block.x,
@@ -153,7 +150,6 @@ class EventManager {
 
                                 this.clientStateManager.setBlockSelectedFromClick(this.player.name, blockPosition)
                                 this.clientStateManager.updateBlockSelected()
-                                // this.cursor.blockSelected = block
                             }
                         }
                     }
@@ -161,9 +157,6 @@ class EventManager {
             })
         })
     }
-
-    private moveHalfOfThePopuation: boolean = false
-
 
     private move(newBlock: Block, prevBlock: Block, moveHalf: boolean): boolean {
         const newBlockPosition: BlockPosition = {
@@ -188,10 +181,11 @@ class EventManager {
         }
         return null
     }
+
     private moveIfBlockIsDefined(x: number, y: number): boolean {
         const newBlock = this.getBlockIfDefined(x, y)
         if (newBlock !== null && this.cursor.blockSelected !== null) {
-            return this.move(newBlock, this.cursor.blockSelected, this.moveHalfOfThePopuation)                    
+            return this.move(newBlock, this.cursor.blockSelected, this.moveHalfOfThePopuation)
         }
         return false
     }
@@ -200,15 +194,9 @@ class EventManager {
     private listenCursorKeyboardEvents() {
         document.addEventListener("keydown", (e) => {
             const key = e.key.toLocaleLowerCase()
-            
-
-
             this.clientStateManager.updateBlockSelected()
-
-
             if (this.cursor.blockSelected !== null) {
-                const x = this.cursor.blockSelected.x
-                const y = this.cursor.blockSelected.y
+                const { x, y } = this.cursor.blockSelected
 
                 let moved: boolean = false
 
@@ -223,16 +211,15 @@ class EventManager {
                 }
                 else if (key === 'arrowleft') {
                     moved = this.moveIfBlockIsDefined(x - 1, y)
-                } else if (key === ' ') {
+                }
+                else if (key === ' ') {
                     this.moveHalfOfThePopuation = true
                 }
 
                 if (moved) {
-                    // this.stateManager.setSurroundingsVisibility(newBlock, Visibility.visible)
                     this.moveHalfOfThePopuation = false
                     this.clientStateManager.updateBlockSelected()
                 }
-            
             }
         })
     }

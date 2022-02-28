@@ -1,6 +1,6 @@
 // import Block from "./Block"
 import Player from "./Player"
-import { BlockPosition, PlayerData } from "./StateManager/stateManagementTypes"
+import { PlayerData } from "./StateManager/stateManagementTypes"
 import Vector from "./Vector"
 
 // Loading sprites
@@ -105,5 +105,6 @@ export const NONE_PLAYER_DATA: PlayerData = {
     blocks: [],
     canGoOnWater: false,
     blockSelected: null,
-    population: 0
+    population: 0,
+    capital: {y: 0 , x: 0}
 }

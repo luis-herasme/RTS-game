@@ -36,9 +36,11 @@ class PlayersStateManager extends StateVisibility {
     }
 
     public updateAlive(player: PlayerData): void {
-        const capital: BlockData = this.getBlockAt(player.capital)
-
-        if (capital.ownerName !== player.name) {
+        const capital: BlockData | null = this.getBlockAt(player.capital)
+        if (capital == null) {
+            console.warn('Capital position not valid.')
+        }
+        else if (capital.ownerName !== player.name) {
             if (player.alive) {
                 const newOwner: PlayerData = this.getPlayerData(capital.ownerName)
                 this.transferAllBlocksTo(player, newOwner)

@@ -3,6 +3,8 @@ import { BlockData } from "../stateManagementTypes"
 
 class StateChecks extends BaseStateManager {
 
+
+    // ! duplicate in settlement ()
     protected isSettlement(block: BlockData): boolean {
         return (
             (block.type == "H") ||

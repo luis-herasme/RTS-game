@@ -5,8 +5,6 @@ import AI from "./AI"
 import Scene from "./Scene"
 import { generateStateFromScene } from "./StateManager/generateStateFromScene"
 import StateManager from "./StateManager/SM/StateManager"
-import { BlockPosition } from "./StateManager/stateManagementTypes"
-
 
 // Debe ir con MAP
 const positions = [
@@ -41,7 +39,8 @@ export function startGame(config: Array<playerConfiguration>) {
 
     const player = new Player(config[0].name, config[0].color, positions[0])
     const capital = scene.getBlockAt(positions[0].x, positions[0].y)
-    capital.owner = player
+    capital.ownerName = player.name
+    capital.color = player.color
     capital.population = 100
 
     const ais = []
@@ -58,7 +57,8 @@ export function startGame(config: Array<playerConfiguration>) {
             stateManager
         )
         capital.population = 5
-        capital.owner = ai
+        capital.color = ai.color
+        capital.ownerName = ai.name
 
         ais.push(ai)
     }

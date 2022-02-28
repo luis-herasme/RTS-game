@@ -5,9 +5,8 @@ import Renderable from "./Renderable"
 import Vector from "./Vector"
 
 class Cursor extends Renderable {
-    public canGoOnWater: boolean = false
-    // public tilemap: HTMLImageElement
     public player: Player
+    public canGoOnWater: boolean = false
     public blockSelected: Block | null = null
 
     constructor(player: Player) {
@@ -15,27 +14,6 @@ class Cursor extends Renderable {
         this.tilemap = TILEMAP
         this.player = player
     }
-
-    // public get blockSelected(): Block | null {
-    //     return this._blockSelected
-    // }
-
-    // public set blockSelected(value: Block | null ) {
-    //     this._blockSelected = value
-
-    //     if (this._blockSelected !== null) {
-
-    //         if (this._blockSelected.type == "SHIP" || this._blockSelected.ship == true) {
-    //             this.canGoOnWater = true
-    //             this.blockSelected.ship = true
-    //         }
-
-    //         if (this._blockSelected.type[0] != "W" && this._blockSelected.type != "SHIP") {
-    //             this.canGoOnWater = false
-    //             this._blockSelected.ship = false
-    //         }
-    //     }
-    // }
 
     // Renders a shadow above the selected block
     public render() {
