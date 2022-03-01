@@ -1,13 +1,15 @@
+import StateMap from "./StateMap";
 
-export interface PlayerDescription {
-    name: string,
-    color: string,
+export interface PlayerConfiguration {
+    name: string
+    color: string
     capital: BlockPosition
+    bot: boolean
 }
 
-export interface StateDescriptor {
+export interface GameConfiguration {
     map: Array<Array<string>>
-    players: Array<PlayerDescription>
+    players: Array<PlayerConfiguration>
 }
 
 export enum Visibility {
@@ -21,7 +23,7 @@ export interface BlockPosition {
 }
 
 export interface State {
-    map: Array<Array<BlockData>>
+    map: StateMap
     players: Map<string, PlayerData>
 }
 
@@ -62,6 +64,7 @@ export interface PlayerData {
     blockSelected: BlockData | null
     population: number
     capital: BlockPosition
+    bot: boolean
 }
 
 export interface PlayerDisplayData {

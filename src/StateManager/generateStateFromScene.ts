@@ -1,5 +1,6 @@
 import Block from "../Block"
-import { BlockData, BlockPosition, PlayerData, State, Visibility } from "./stateManagementTypes"
+import { BlockData, PlayerData, State, Visibility } from "./stateManagementTypes"
+import StateMap from "./StateMap"
 
 // ! This is just for initial scene, capital position is needed
 
@@ -95,7 +96,8 @@ function getPlayerDataFromBlock(block: Block): PlayerData {
         canGoOnWater: false,
         blockSelected: null,
         population: 0, // Changes after,
-        capital: {x: block.x, y: block.y} // Changes after, // ! This is just for initial scene, capital position is needed
+        capital: {x: block.x, y: block.y}, // Changes after, // ! This is just for initial scene, capital position is needed
+        //! FALTA BOT
     }
 }
 
@@ -116,17 +118,6 @@ function generateMapStateFromMap(map: Array<Array<Block>>) {
         }
     }
     return mapState
-}
-
-function getAllPlayersInTheScene(map: Array<Array<Block>>): Array<string> {
-    const players: Array<string> = []
-    for (let y = 0; y < map.length; y++) {
-        for (let x = 0; x < map[y].length; x++) {
-            const block = map[y][x]
-            players.push(block.ownerName)
-        }
-    }
-    return [...new Set(players)]
 }
 
 function generatePlayersStateFromMap(mapState: Array<Array<BlockData>>, map: Array<Array<Block>>): Map<string, PlayerData> {
@@ -179,7 +170,7 @@ export function generateStateFromScene(map: Array<Array<Block>>): State {
     setVisibility(mapState, playersNameList)
 
     return {
-        map: mapState,
+        map: new StateMap(mapState),
         players: playersState
     }
 }

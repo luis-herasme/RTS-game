@@ -1,5 +1,5 @@
 import Block from "./Block"
-import { BLOCK_DEFAULT_SIZE } from "./constants"
+import { BLOCK_DEFAULT_SIZE } from "./constants/constants"
 import FPS from "./FPSManager"
 import Scene from "./Scene"
 import Vector from "./Vector"

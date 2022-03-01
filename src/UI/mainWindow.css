@@ -20,6 +20,7 @@ button {
     background-color: white;
     border: none;
     padding: 15px;
+    border: 1px solid black;
 }
 
 input {
@@ -32,10 +33,15 @@ input {
 }
 
 button:hover {
-    transition-duration: 200ms;
-    background-color: #ddd;
-    /* padding: 20px; */
-    margin-top: 1px;
+    transition-duration: 800ms;
+    background-color: #888;
+    color: white;
+    border: 1px solid white;
+    /* padding: 13px;  */
+    /* padding: 17px; */
+    /* border-radius: 10px; */
+    /* font-weight:bolder; */
+    /* margin-top: 1px; */
 }
 
 .disabledButton {

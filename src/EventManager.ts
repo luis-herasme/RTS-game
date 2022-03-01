@@ -1,12 +1,13 @@
 import Block from "./Block"
 import Camera from "./Camera"
-import { FORCE } from "./constants"
+import { FORCE } from "./constants/constants"
 import Cursor from "./Cursor"
 import Player from "./Player"
 import Renderable from "./Renderable"
 import Vector from "./Vector"
 import { BlockPosition } from "./StateManager/stateManagementTypes"
-import ClientStateManager from "./StateManager/ClientStateManager"
+import ClientStateManager from "./StateManager/SinglePlayerStateManager"
+import Scene from "./Scene"
 
 /**
  * All the game events are handled here, except UI events,
@@ -16,14 +17,14 @@ class EventManager {
     private cursor: Cursor
     private camera: Camera
     private player: Player
-    private map: Array<Array<Block>>
+    private scene: Scene
     private cameraDisplacementAfterDrag: number = 0
     private clickDuration: number = 0
     private clientStateManager: ClientStateManager
     private moveHalfOfThePopuation: boolean = false
 
-    constructor(map: Array<Array<Block>>, cursor: Cursor, camera: Camera, player: Player, clientStateManager: ClientStateManager) {
-        this.map = map
+    constructor(scene: Scene, cursor: Cursor, camera: Camera, player: Player, clientStateManager: ClientStateManager) {
+        this.scene = scene
         this.cursor = cursor
         this.player = player
         this.camera = camera
@@ -137,23 +138,21 @@ class EventManager {
     private listenBlockClick(): void {
         document.addEventListener("mouseup", (e: MouseEvent) => {
             const mousePosition = new Vector(e.clientX, e.clientY)
-            this.map.forEach(mapRow => {
-                mapRow.forEach(block => {
-                    if (mousePosition.isInsideBlock(block)) {
-                        if ((this.cameraDisplacementAfterDrag < Renderable.scale * 10) && (this.clickDuration > 5)) {
-                            if (block.ownerName == this.player.name) {
+            this.scene.eachBlock((block: Block) => {
+                if (mousePosition.isInsideBlock(block)) {
+                    if ((this.cameraDisplacementAfterDrag < Renderable.scale * 10) && (this.clickDuration > 5)) {
+                        if (block.ownerName == this.player.name) {
 
-                                const blockPosition: BlockPosition = {
-                                    x: block.x,
-                                    y: block.y
-                                }
-
-                                this.clientStateManager.setBlockSelectedFromClick(this.player.name, blockPosition)
-                                this.clientStateManager.updateBlockSelected()
+                            const blockPosition: BlockPosition = {
+                                x: block.x,
+                                y: block.y
                             }
+
+                            this.clientStateManager.setBlockSelectedFromClick(this.player.name, blockPosition)
+                            this.clientStateManager.updateBlockSelected()
                         }
                     }
-                })
+                }
             })
         })
     }
@@ -172,18 +171,8 @@ class EventManager {
         return this.clientStateManager.move(newBlockPosition, prevBlockPosition, this.player.name, moveHalf)
     }
 
-    // TODO: Clase MAPA que es parte de scena y es el mapa del state pueden compartir esto
-    private getBlockIfDefined(x: number, y: number): Block | null {
-        if (this.map[y]) {
-            if (this.map[y][x] !== undefined) {
-                return this.map[y][x]
-            }
-        }
-        return null
-    }
-
     private moveIfBlockIsDefined(x: number, y: number): boolean {
-        const newBlock = this.getBlockIfDefined(x, y)
+        const newBlock = this.scene.getBlockIfDefined(x, y)
         if (newBlock !== null && this.cursor.blockSelected !== null) {
             return this.move(newBlock, this.cursor.blockSelected, this.moveHalfOfThePopuation)
         }

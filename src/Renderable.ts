@@ -4,7 +4,7 @@ import {
     TILEMAP,
     BLOCK_DEFAULT_SIZE,
     getTextureAtlasPosition
-} from "./constants"
+} from "./constants/constants"
 import Vector from "./Vector"
 
 class Renderable {
@@ -87,7 +87,7 @@ class Renderable {
         )
 
         if (stroke) {
-            // context.stroke()
+            Renderable.context.stroke()
         } else {
             Renderable.context.fill()
         }

@@ -1,5 +1,5 @@
 import Vector from "./Vector"
-import { BLOCK_DEFAULT_SIZE } from "./constants"
+import { BLOCK_DEFAULT_SIZE } from "./constants/constants"
 import Block from "./Block"
 import Settlement from "./Settlement"
 

@@ -1,7 +1,8 @@
 import Vector from "./Vector"
 import Renderable from "./Renderable"
-import { isTextureDefined, NONE_PLAYER } from "./constants"
+import { isTextureDefined } from "./constants/constants"
 import { BlockDataValidToAPlayer, Visibility } from "./StateManager/stateManagementTypes"
+import { NONE_PLAYER } from "./constants/NONE_PLAYER"
 
 class Block extends Renderable {
     public ownerName: string = NONE_PLAYER.name
@@ -92,9 +93,6 @@ class Block extends Renderable {
             if ((this.population !== 0)) {
                 this.drawText(String(this.population))
             }
-
-            // Draw tile border
-            this.drawRect(true)
         }
     }
 }

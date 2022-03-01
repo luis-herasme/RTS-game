@@ -1,8 +1,8 @@
-import { NONE_PLAYER } from "./constants"
+import { NONE_PLAYER } from "./constants/NONE_PLAYER"
 import Cursor from "./Cursor"
 import FPS from "./FPSManager"
 import Settlement from "./Settlement"
-import ClientStateManager from "./StateManager/ClientStateManager"
+import ClientStateManager from "./StateManager/SinglePlayerStateManager"
 import { PlayerDisplayData } from "./StateManager/stateManagementTypes"
 
 class UI {
@@ -73,14 +73,14 @@ class UI {
         this.population.innerText = `Population: ${population}`
     }
 
-    public RGBAToRGB(rgba: string): string {
+    private RGBAToRGB(rgba: string): string {
         let removeParentesis = rgba.split("(")[1]
         removeParentesis = removeParentesis.split(")")[0]
         const colors = removeParentesis.split(",")
         return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")"
     }
 
-    public startLevelUpOnClickEvent() {
+    private startLevelUpOnClickEvent() {
         if (this.levelUpButton !== null) {
             this.levelUpButton.onclick = () => {
                 this.clientStateManager.levelUpBlockSelected(this.playerName)
@@ -90,7 +90,7 @@ class UI {
         }
     }
 
-    public updateLevelUpButtonVisibility(cursor: Cursor) {
+    private updateLevelUpButtonVisibility(cursor: Cursor) {
         if (this.levelUpButton == null) {
             throw Error("LevelUpButton DOM element not defined.")
         }

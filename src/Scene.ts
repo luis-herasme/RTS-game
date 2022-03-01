@@ -35,6 +35,15 @@ class Scene {
             block.render()
         })
     }
+
+    public getBlockIfDefined(x: number, y: number): Block | null {
+        if (this.map[y]) {
+            if (this.map[y][x] !== undefined) {
+                return this.map[y][x]
+            }
+        }
+        return null
+    }
 }
 
 export default Scene

@@ -1,10 +1,16 @@
+import React from "react"
 import { useEffect } from "react"
-import { startGame } from "../index"
+import { startSinglePlayerGame } from "../index"
+import { GameConfiguration } from "../StateManager/stateManagementTypes"
 
-export function GameWindow({config}) {
+interface GameConfigurationAsProps {
+    configuration: GameConfiguration
+}
+
+export function GameWindow({configuration}: GameConfigurationAsProps) {
 
     useEffect(() => {
-        startGame(config)
+        startSinglePlayerGame(configuration)
     }, [])
 
     return (

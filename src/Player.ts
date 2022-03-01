@@ -12,7 +12,7 @@ class Player {
         this.name = name
         this.color = color
         this.capital = capital
-        this.cursor = new Cursor(this)
+        this.cursor = new Cursor()
     }
 }
 

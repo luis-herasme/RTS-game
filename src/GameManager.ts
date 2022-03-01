@@ -1,4 +1,4 @@
-import ClientStateManager from "./StateManager/ClientStateManager"
+import ClientStateManager from "./StateManager/SinglePlayerStateManager"
 import StateManager from "./StateManager/SM/StateManager"
 import CanvasManager from "./CanvasManager"
 import EventHandler from "./EventManager"
@@ -18,15 +18,15 @@ class GameManager {
     private fpsManager: FPS
     private clientStateManager: ClientStateManager
 
-    constructor(scene: Scene, player: Player, stateManager: StateManager) {
+    constructor(scene: Scene, player: Player, clientStateManager: ClientStateManager) {
         this.scene = scene
         this.player = player
         this.canvasManager = new CanvasManager()
         this.fpsManager = new FPS()
         this.camera = new Camera(scene)
-        this.clientStateManager = new ClientStateManager(player, scene, stateManager)
+        this.clientStateManager = clientStateManager
         this.uiManager = new UI(this.clientStateManager, this.player.name)
-        this.eventManager = new EventHandler(scene.map, player.cursor, this.camera, player, this.clientStateManager)
+        this.eventManager = new EventHandler(scene, player.cursor, this.camera, player, this.clientStateManager)
 
         // set camera initial position to player capital position
         const capital = this.scene.getBlockAt(this.player.capital.x, this.player.capital.y)
@@ -48,7 +48,7 @@ class GameManager {
     }
 
     private checkIfLost() {
-        const alive: boolean = this.clientStateManager.checkIfAlive(this.player.name)
+        const alive: boolean = this.clientStateManager.checkIfAlive()
 
         if (!alive && this.player.alive) {
             alert(`You lost!`)

@@ -4,7 +4,10 @@ import { useContext, useEffect, useState } from "react"
 import { MainWindow } from "./mainWindow"
 import { PageContext } from "./screensManager"
 import { PlayerCard } from "./Components/PlayerCard"
-import { GameWindow } from "./gameWindow"
+import { GameWindow } from "./GameWindow"
+import React from "react"
+import { GameConfiguration, PlayerConfiguration } from "../StateManager/stateManagementTypes"
+import { MAP } from "../constants/constants"
 
 const MAX_BOTS = 3
 
@@ -16,7 +19,7 @@ const colors = [
     "#ffffff"
 ]
 
-function checkIfPropIsTaken(name, prop, players) {
+function checkIfPropIsTaken(name: string, prop: string, players: Array<JSX.Element>) {
     for (let i = 0; i < players.length; i++) {
         if (name == players[i].props[prop]) {
             return true
@@ -25,7 +28,7 @@ function checkIfPropIsTaken(name, prop, players) {
     return false
 }
 
-function findValidName(players) {
+function findValidName(players: Array<JSX.Element>) {
     let name = ""
     let nameNumber = 1
 
@@ -39,13 +42,13 @@ function findValidName(players) {
     }
 }
 
-function findRandomValidColor(players) {
+function findRandomValidColor(players: Array<JSX.Element>) {
     const validColors = getValidColors(players)
     const randomValidColorIdx = Math.round(Math.random() * (validColors.length - 1))
     return validColors[randomValidColorIdx]
 }
 
-function getValidColors(players) {
+function getValidColors(players: Array<JSX.Element>) {
     const colorsTaken = players.map(player => player.props.color)
     return colors.filter(
         color => !colorsTaken.includes(color)
@@ -54,9 +57,9 @@ function getValidColors(players) {
 
 export function ConfigureGameWindow(): JSX.Element {
     const goTo = useContext(PageContext)
-    const [players, setPlayers] = useState([])
+    const [players, setPlayers] = useState([] as Array<JSX.Element>)
 
-    const removePlayer = (name) => {
+    const removePlayer = (name: string) => {
         return (() => {
             setPlayers(prevPlayersState => {
                 const newPlayersState = prevPlayersState.filter(player => player.props.name !== name)
@@ -65,7 +68,7 @@ export function ConfigureGameWindow(): JSX.Element {
         })
     }
 
-    function updateAllPlayersValidColors(players, removePlayer) {
+    function updateAllPlayersValidColors(players: Array<JSX.Element>, removePlayer: Function) {
         const updatedValidColors = getValidColors(players)
         const newPlayersState = []
 
@@ -85,9 +88,9 @@ export function ConfigureGameWindow(): JSX.Element {
         return newPlayersState
     }
 
-    const setColor = (name, setPlayers) => {
-        return (color) => {
-            setPlayers(prev => {
+    const setColor = (name: string, setPlayers: Function) => {
+        return (color: string) => {
+            setPlayers((prev: Array<JSX.Element>) => {
                 const newPlayersState = []
                 for (let player of prev) {
                     let newPlayer
@@ -110,7 +113,7 @@ export function ConfigureGameWindow(): JSX.Element {
         }
     }
 
-    function createPlayer(name, color, players) {
+    function createPlayer(name: string, color: string, players: Array<JSX.Element>) {
         return (
             <PlayerCard
                 setColor={setColor(name, setPlayers)}
@@ -124,7 +127,7 @@ export function ConfigureGameWindow(): JSX.Element {
 
 
     function addBot() {
-        setPlayers((prevPlayers) => {
+        setPlayers((prevPlayers: Array<JSX.Element>) => {
             if (prevPlayers.length <= MAX_BOTS) {
                 const name = findValidName(prevPlayers)
                 const color = findRandomValidColor(prevPlayers)
@@ -151,16 +154,23 @@ export function ConfigureGameWindow(): JSX.Element {
         setPlayers([mainPlayer])
     }, [])
 
-    function getGameConfigurationData() {
-        const data = []
-        for (let player of players) {
-            data.push({
+    function getGameConfigurationData(): GameConfiguration {
+        const result: GameConfiguration = {
+            players: [],
+            map: []
+        }
+        result.map = MAP.tiles
+        for (let i in players) {
+            const player = players[i]
+            const playerConfiguration: PlayerConfiguration = {
                 name: player.props.name,
                 color: player.props.color,
+                capital: MAP.capitalPositions[i],
                 bot: player.props.name != userName
-            })
+            }
+            result.players.push(playerConfiguration)
         }
-        return data
+        return result
     }
 
     return (
@@ -197,7 +207,7 @@ export function ConfigureGameWindow(): JSX.Element {
                     </div>
                     <hr style={{ height: "3px", border: "none", backgroundColor: "white", marginTop: "10vh" }} />
                     <div style={{ textAlign: "right" }}>
-                        <button onClick={goTo(<GameWindow config={getGameConfigurationData()} />)}>Start</button>
+                        <button onClick={goTo(<GameWindow configuration={getGameConfigurationData()} />)}>Start</button>
                     </div>
                 </div>
 

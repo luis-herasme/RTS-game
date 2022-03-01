@@ -1,5 +1,6 @@
 import { setVisibility } from "./generateStateFromScene"
-import { BlockData, PlayerData, PlayerDescription, State, StateDescriptor, Visibility } from "./stateManagementTypes"
+import { BlockData, PlayerData, PlayerConfiguration, State, GameConfiguration, Visibility } from "./stateManagementTypes"
+import StateMap from "./StateMap"
 
 function generateMapStateFromMap(map: Array<Array<string>>) {
     const mapState: Array<Array<BlockData>> = []
@@ -16,7 +17,7 @@ function canBeConquer(type: string): boolean {
     return (type[0] != "W" && type != "MOUNTAIN")
 }
 
-function setCapitals(map: Array<Array<BlockData>>, playersDescription: Array<PlayerDescription>): Array<Array<BlockData>> {
+function setCapitals(map: Array<Array<BlockData>>, playersDescription: Array<PlayerConfiguration>): Array<Array<BlockData>> {
     for (let playerDescription of playersDescription) {
         const {x, y} = playerDescription.capital
         map[y][x].ownerName = playerDescription.name
@@ -26,14 +27,37 @@ function setCapitals(map: Array<Array<BlockData>>, playersDescription: Array<Pla
 
 function generateBlockData(type: string, x: number, y: number): BlockData {
     const visibility = new Map<string, Visibility>()
-    // visibility.set(block.owner.name, Visibility.visible)
+
+    let level = 0
+    let population = 0
+
+    if (type == "H") {
+        level = 0
+        population = 5
+    }
+    else if (type == "TOWER_LEVEL_1") {
+        level = 1
+        population = 10
+    } 
+    else if (type == "TOWER_LEVEL_2") {
+        level = 2
+        population = 50
+    }
+    else if (type == "TOWER_LEVEL_3") {
+        level = 3
+        population = 100
+    }
+    else if (type == "SHIP") {
+        population = 2
+    }
+
     return {
         ownerName: "NONE",
         previousOwnerName: "NONE",
         position: { x, y },
-        population: 0,
+        population,
         type: type,
-        level: 0,
+        level,
         ship: false,
         visibility: visibility,
         canBeConquer: canBeConquer(type),
@@ -41,7 +65,7 @@ function generateBlockData(type: string, x: number, y: number): BlockData {
     }
 }
 
-function dataFromPlayerDescription(playerDescription: PlayerDescription, map: Array<Array<BlockData>>): PlayerData {
+function dataFromPlayerDescription(playerDescription: PlayerConfiguration, map: Array<Array<BlockData>>): PlayerData {
     return {
         name: playerDescription.name,
         alive: true,
@@ -50,11 +74,12 @@ function dataFromPlayerDescription(playerDescription: PlayerDescription, map: Ar
         canGoOnWater: false,
         blockSelected: null,
         population: 0,
-        capital: playerDescription.capital
+        capital: playerDescription.capital,
+        bot: playerDescription.bot
     }
 }
 
-function playersDataFromPlayersDescriptions(playersDescriptions: Array<PlayerDescription>, map: Array<Array<BlockData>>): Map<string, PlayerData> {
+function playersDataFromPlayersDescriptions(playersDescriptions: Array<PlayerConfiguration>, map: Array<Array<BlockData>>): Map<string, PlayerData> {
     const playersData: Map<string, PlayerData> = new Map<string, PlayerData>()
     for (let playerDescription of playersDescriptions) {
         playersData.set(playerDescription.name, dataFromPlayerDescription(playerDescription, map))
@@ -62,14 +87,22 @@ function playersDataFromPlayersDescriptions(playersDescriptions: Array<PlayerDes
     return playersData
 }
 
-export function stateGenerator(stateDescription: StateDescriptor): State {
-    const playersNames: Array<string> = stateDescription.players.map((x: PlayerDescription) => x.name)
+export function generateStateFromGameConfiguration(stateDescription: GameConfiguration): State {
+    const playersNames: Array<string> = stateDescription.players.map((x: PlayerConfiguration) => x.name)
     let map = generateMapStateFromMap(stateDescription.map)
+
+    stateDescription.players.push({
+        name: "NONE",
+        color: "",
+        capital: {x: 0, y: 0},
+        bot: false
+    })
+
     map = setCapitals(map, stateDescription.players)
 
     stateDescription.players
     const players = playersDataFromPlayersDescriptions(stateDescription.players, map)
     setVisibility(map, playersNames)
 
-    return { map, players }
+    return { map: new StateMap(map), players }
 }
