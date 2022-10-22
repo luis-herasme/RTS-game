@@ -1,5 +1,4 @@
 import ClientStateManager from './StateManager/SinglePlayerStateManager';
-import StateManager from './StateManager/SM/StateManager';
 import CanvasManager from './CanvasManager';
 import EventHandler from './EventManager';
 import Camera from './Camera';

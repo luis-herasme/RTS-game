@@ -7,7 +7,7 @@
         "test": "jest",
         "build": "npx parcel build src/index.html",
         "lint": "eslint src/index.ts",
-        "check": "npx tsc -t es5 src/index.ts --noEmit --strict"
+        "check": "npx tsc -t es5 src/index.ts --noEmit --strict --downlevelIteration"
     },
     "keywords": [],
     "author": "",
