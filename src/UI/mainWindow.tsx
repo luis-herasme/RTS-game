@@ -23,8 +23,8 @@ export function MainWindow() {
 
     return (
         <div id="screen">
-            <h1>Project block-wars</h1>
-            <p>Name: <input type="text" value={name} onChange={setUserName}/></p>
+            <h1 className="underline">Project block-wars</h1>
+            <p>Name: <input className="text-black" type="text" value={name} onChange={setUserName}/></p>
             <button onClick={goTo(<ConfigureMultiplayerGameWindow />)}>Multiplayer</button>
 
             <button style={{marginLeft: 20}} onClick={goTo(<ConfigureGameWindow />)}>Singleplayer</button>
