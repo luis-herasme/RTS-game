@@ -29,7 +29,7 @@ input {
     color: black;
     background-color: white;
     border: none;
-    padding: 15px; 
+    padding: 15px;
 }
 
 button:hover {
@@ -54,7 +54,6 @@ button:hover {
 .disabledButton:hover {
     cursor: not-allowed;
 }
-
 
 button:hover {
     cursor: pointer;

@@ -1,47 +1,46 @@
-import Block from "../Block"
-import { BlockData, PlayerData, State, Visibility } from "./stateManagementTypes"
-import StateMap from "./StateMap"
+import Block from '../Block';
+import { BlockData, PlayerData, State, Visibility } from './stateManagementTypes';
+import StateMap from './StateMap';
 
 // ! This is just for initial scene, capital position is needed
 
-function blockDefined({ position: {x, y} }: BlockData, map: Array<Array<BlockData>>) {
+function blockDefined({ position: { x, y } }: BlockData, map: Array<Array<BlockData>>) {
     if (map[y]) {
         if (map[y][x]) {
-            return true
+            return true;
         }
     }
-    return false
+    return false;
 }
 
 function setBlockSurroundingVisibility(block: BlockData, map: Array<Array<BlockData>>): void {
     if (blockDefined(map[block.position.y][block.position.x], map))
-        map[block.position.y][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y][block.position.x].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y][block.position.x + 1])
-        map[block.position.y][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y][block.position.x - 1])
-        map[block.position.y][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y + 1][block.position.x])
-        map[block.position.y + 1][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y + 1][block.position.x].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y - 1][block.position.x])
-        map[block.position.y - 1][block.position.x].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y - 1][block.position.x].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y + 1][block.position.x + 1])
-        map[block.position.y + 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y + 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y + 1][block.position.x - 1])
-        map[block.position.y + 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y + 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y - 1][block.position.x + 1])
-        map[block.position.y - 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y - 1][block.position.x + 1].visibility.set(block.ownerName, Visibility.visible);
     if (map[block.position.y - 1][block.position.x + 1])
-        map[block.position.y - 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible)
+        map[block.position.y - 1][block.position.x - 1].visibility.set(block.ownerName, Visibility.visible);
 }
 
 export function setVisibility(map: Array<Array<BlockData>>, playersNameList: Array<string>): void {
-
     // Setting all for all players to hidden
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
-            const block = map[y][x]
+            const block = map[y][x];
             for (let playerName of playersNameList) {
-                block.visibility.set(playerName, Visibility.hidden)
+                block.visibility.set(playerName, Visibility.hidden);
             }
         }
     }
@@ -49,33 +48,35 @@ export function setVisibility(map: Array<Array<BlockData>>, playersNameList: Arr
     // Setting to visible blocks around a player
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[y].length; x++) {
-            const block = map[y][x]
-            if (block.ownerName !== "NONE") {
-                setBlockSurroundingVisibility(block, map)
+            const block = map[y][x];
+            if (block.ownerName !== 'NONE') {
+                setBlockSurroundingVisibility(block, map);
             }
         }
     }
 }
 
 function canBeConquer(block: Block): boolean {
-    if (block.type[0] === "W") { // Water type
-        return false
-    } else if (block.type == "MOUNTAIN") { // Mountain
-        return false
+    if (block.type[0] === 'W') {
+        // Water type
+        return false;
+    } else if (block.type == 'MOUNTAIN') {
+        // Mountain
+        return false;
     } else {
-        return true
+        return true;
     }
 }
 
 function getBlockData(block: Block): BlockData {
-    const visibility = new Map<string, Visibility>()
-    visibility.set(block.ownerName, Visibility.visible)
+    const visibility = new Map<string, Visibility>();
+    visibility.set(block.ownerName, Visibility.visible);
     return {
         ownerName: block.ownerName,
-        previousOwnerName: "NONE",
+        previousOwnerName: 'NONE',
         position: {
             x: block.x,
-            y: block.y,
+            y: block.y
         },
         population: block.population,
         type: block.type,
@@ -84,7 +85,7 @@ function getBlockData(block: Block): BlockData {
         visibility: visibility,
         canBeConquer: canBeConquer(block),
         dirty: true
-    }
+    };
 }
 
 function getPlayerDataFromBlock(block: Block): PlayerData {
@@ -96,81 +97,83 @@ function getPlayerDataFromBlock(block: Block): PlayerData {
         canGoOnWater: false,
         blockSelected: null,
         population: 0, // Changes after,
-        capital: {x: block.x, y: block.y}, // Changes after, // ! This is just for initial scene, capital position is needed
+        capital: { x: block.x, y: block.y } // Changes after, // ! This is just for initial scene, capital position is needed
         //! FALTA BOT
-    }
+    };
 }
 
 function getPlayerPopulationFromBlocks(playerBlocksData: Array<BlockData>): number {
-    let totalPlayerPopulation = 0
+    let totalPlayerPopulation = 0;
     for (let blockData of playerBlocksData) {
-        totalPlayerPopulation += blockData.population
+        totalPlayerPopulation += blockData.population;
     }
-    return totalPlayerPopulation
+    return totalPlayerPopulation;
 }
 
 function generateMapStateFromMap(map: Array<Array<Block>>) {
-    const mapState: Array<Array<BlockData>> = []
+    const mapState: Array<Array<BlockData>> = [];
     for (let y = 0; y < map.length; y++) {
-        mapState.push([])
+        mapState.push([]);
         for (let x = 0; x < map[y].length; x++) {
-            mapState[y][x] = getBlockData(map[y][x])
+            mapState[y][x] = getBlockData(map[y][x]);
         }
     }
-    return mapState
+    return mapState;
 }
 
-function generatePlayersStateFromMap(mapState: Array<Array<BlockData>>, map: Array<Array<Block>>): Map<string, PlayerData> {
-
+function generatePlayersStateFromMap(
+    mapState: Array<Array<BlockData>>,
+    map: Array<Array<Block>>
+): Map<string, PlayerData> {
     // const playersNames: Array<string> = getAllPlayersInTheScene(map)
-    const playersBlocksData = new Map<string, Array<BlockData>>()
-    const playersData = new Map<string, PlayerData>()
+    const playersBlocksData = new Map<string, Array<BlockData>>();
+    const playersData = new Map<string, PlayerData>();
 
     for (let y = 0; y < mapState.length; y++) {
         for (let x = 0; x < mapState[y].length; x++) {
-            const blockData = mapState[y][x]
+            const blockData = mapState[y][x];
 
             if (!playersData.get(blockData.ownerName)) {
-                playersData.set(blockData.ownerName, getPlayerDataFromBlock(map[y][x]))
+                playersData.set(blockData.ownerName, getPlayerDataFromBlock(map[y][x]));
             }
 
             if (!playersBlocksData.get(blockData.ownerName)) {
-                playersBlocksData.set(blockData.ownerName, [])
+                playersBlocksData.set(blockData.ownerName, []);
             }
 
-            const playerBlocksData: Array<BlockData> | undefined = playersBlocksData.get(blockData.ownerName)
+            const playerBlocksData: Array<BlockData> | undefined = playersBlocksData.get(blockData.ownerName);
             if (playerBlocksData === undefined) {
-                throw Error("Player block data is not defined for this player, (An empty array is needed).")
+                throw Error('Player block data is not defined for this player, (An empty array is needed).');
             }
-            playerBlocksData.push(blockData)
+            playerBlocksData.push(blockData);
         }
     }
 
     for (let playerBlocksData of playersBlocksData.values()) {
-        const playerName = playerBlocksData[0].ownerName
-        const playerData: PlayerData | undefined = playersData.get(playerName)
+        const playerName = playerBlocksData[0].ownerName;
+        const playerData: PlayerData | undefined = playersData.get(playerName);
 
         if (playerData === undefined) {
-            throw Error("Player is not defined in the state that is beeing constructed yet.")
+            throw Error('Player is not defined in the state that is beeing constructed yet.');
         }
 
-        playerData.blocks = playerBlocksData
-        playerData.population = getPlayerPopulationFromBlocks(playerBlocksData)
+        playerData.blocks = playerBlocksData;
+        playerData.population = getPlayerPopulationFromBlocks(playerBlocksData);
     }
 
-    return playersData
+    return playersData;
 }
 
 export function generateStateFromScene(map: Array<Array<Block>>): State {
-    const mapState: Array<Array<BlockData>> = generateMapStateFromMap(map)
-    const playersState: Map<string, PlayerData> = generatePlayersStateFromMap(mapState, map)
+    const mapState: Array<Array<BlockData>> = generateMapStateFromMap(map);
+    const playersState: Map<string, PlayerData> = generatePlayersStateFromMap(mapState, map);
 
-    const playersNameList: Array<string> = Array.from(playersState.keys())
+    const playersNameList: Array<string> = Array.from(playersState.keys());
 
-    setVisibility(mapState, playersNameList)
+    setVisibility(mapState, playersNameList);
 
     return {
         map: new StateMap(mapState),
         players: playersState
-    }
+    };
 }

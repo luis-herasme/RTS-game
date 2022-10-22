@@ -1,76 +1,80 @@
-import Player from "../Player"
-import Scene from "../Scene"
-import { BlockDataValidToAPlayer, BlockPosition, GameConfiguration, PlayerDisplayData } from "./stateManagementTypes"
-import StateManager from "./StateManager"
-import { generateStateFromGameConfiguration } from "./stateGenerator"
+import Player from '../Player';
+import Scene from '../Scene';
+import { BlockDataValidToAPlayer, BlockPosition, GameConfiguration, PlayerDisplayData } from './stateManagementTypes';
+import StateManager from './StateManager';
+import { generateStateFromGameConfiguration } from './stateGenerator';
 
 class SinglePlayerStateManager {
-    private player: Player
-    private scene: Scene
-    private stateManager: StateManager
+    private player: Player;
+    private scene: Scene;
+    private stateManager: StateManager;
 
     constructor(player: Player, scene: Scene, configuration: GameConfiguration) {
-        this.player = player
-        this.scene = scene
+        this.player = player;
+        this.scene = scene;
 
         // State Configuration
-        const stateManager = new StateManager()
-        const initialState = generateStateFromGameConfiguration(configuration)
-        stateManager.loadState(initialState)
-        stateManager.updateBlocksPopulation()
-        stateManager.start()
+        const stateManager = new StateManager();
+        const initialState = generateStateFromGameConfiguration(configuration);
+        stateManager.loadState(initialState);
+        stateManager.updateBlocksPopulation();
+        stateManager.start();
 
-        this.stateManager = stateManager
+        this.stateManager = stateManager;
     }
 
     public update() {
-        this.updateBlockSelected()
-        this.updateBlocks()
+        this.updateBlockSelected();
+        this.updateBlocks();
     }
 
     public updateBlocks() {
-        const newState: Array<BlockDataValidToAPlayer> = this.stateManager.getBoardState(this.player.name)
+        const newState: Array<BlockDataValidToAPlayer> = this.stateManager.getBoardState(this.player.name);
         for (let blockNewData of newState) {
-            const block = this.scene.getBlockAt(blockNewData.position.x, blockNewData.position.y)
-            block.updateState(blockNewData)
+            const block = this.scene.getBlockAt(blockNewData.position.x, blockNewData.position.y);
+            block.updateState(blockNewData);
         }
     }
 
     public updateBlockSelected() {
-        const playerData = this.stateManager.getPlayerData(this.player.name)
+        const playerData = this.stateManager.getPlayerData(this.player.name);
 
         if (playerData.blockSelected !== null) {
-            this.player.cursor.blockSelected = this.scene.map[playerData.blockSelected.position.y][playerData.blockSelected.position.x]
+            this.player.cursor.blockSelected =
+                this.scene.map[playerData.blockSelected.position.y][playerData.blockSelected.position.x];
         }
     }
-
-
 
     // API
 
     public levelUpBlockSelected(playerName: string): void {
-        this.stateManager.levelUpBlockSelected(playerName)
+        this.stateManager.levelUpBlockSelected(playerName);
     }
 
     public getLeaderBoard(): Array<PlayerDisplayData> {
-        return this.stateManager.getLeaderBoard()
+        return this.stateManager.getLeaderBoard();
     }
 
-    public move(newBlockPosition: BlockPosition, prevBlockPosition: BlockPosition, playerName: string, moveHalf: boolean = false): boolean {
-        return this.stateManager.move(newBlockPosition, prevBlockPosition, playerName, moveHalf)
+    public move(
+        newBlockPosition: BlockPosition,
+        prevBlockPosition: BlockPosition,
+        playerName: string,
+        moveHalf: boolean = false
+    ): boolean {
+        return this.stateManager.move(newBlockPosition, prevBlockPosition, playerName, moveHalf);
     }
 
     public setBlockSelectedFromClick(playerName: string, blockPosition: BlockPosition) {
-        this.stateManager.setBlockSelectedFromClick(playerName, blockPosition)
+        this.stateManager.setBlockSelectedFromClick(playerName, blockPosition);
     }
 
     public getWinner(): string | null {
-        return this.stateManager.getWinner()
+        return this.stateManager.getWinner();
     }
 
     public checkIfAlive(): boolean {
-        return this.stateManager.checkIfAlive(this.player.name)
+        return this.stateManager.checkIfAlive(this.player.name);
     }
 }
 
-export default SinglePlayerStateManager
+export default SinglePlayerStateManager;

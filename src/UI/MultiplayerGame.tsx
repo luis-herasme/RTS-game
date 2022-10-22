@@ -1,7 +1,9 @@
-import React from "react"
+import React from 'react';
 
 export function MultiplayerGame() {
-    return <>
-        <p>Multiplayer game</p>
-    </>
+    return (
+        <>
+            <p>Multiplayer game</p>
+        </>
+    );
 }

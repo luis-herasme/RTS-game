@@ -1,17 +1,16 @@
-import React from "react"
-import { useEffect } from "react"
-import { startSinglePlayerGame } from "../index"
-import { GameConfiguration } from "../StateManager/stateManagementTypes"
+import React from 'react';
+import { useEffect } from 'react';
+import { startSinglePlayerGame } from '../index';
+import { GameConfiguration } from '../StateManager/stateManagementTypes';
 
 interface GameConfigurationAsProps {
-    configuration: GameConfiguration
+    configuration: GameConfiguration;
 }
 
-export function GameWindow({configuration}: GameConfigurationAsProps) {
-
+export function GameWindow({ configuration }: GameConfigurationAsProps) {
     useEffect(() => {
-        startSinglePlayerGame(configuration)
-    }, [])
+        startSinglePlayerGame(configuration);
+    }, []);
 
     return (
         <>
@@ -22,10 +21,9 @@ export function GameWindow({configuration}: GameConfigurationAsProps) {
             <div id="LeaderBoard">
                 <p>Leader board</p>
                 <hr />
-                <div id="playersLeaderBoard">
-                </div>
+                <div id="playersLeaderBoard"></div>
             </div>
             <div id="FPS">FPS:</div>
         </>
-    )
+    );
 }
