@@ -22,9 +22,7 @@ class StateManager {
 
     public start(): void {
         this.updateBlocksPopulation();
-        setInterval(() => {
-            this.update();
-        }, this.updatePeriod);
+        setInterval(() => this.update(), this.updatePeriod);
     }
 
     public getBlockSelected(playerName: string): BlockPosition | undefined {
@@ -84,6 +82,7 @@ class StateManager {
                 block.dirty = false;
             }
         });
+
         return data;
     }
 
@@ -116,7 +115,14 @@ class StateManager {
         }
     }
 
-    public levelUpBlock(blockPosition: BlockPosition): void {
+    public levelUpBlockSelected(playerName: string) {
+        const block = this.getBlockSelected(playerName);
+        if (block) {
+            this.levelUpBlock(block);
+        }
+    }
+
+    private levelUpBlock(blockPosition: BlockPosition): void {
         const block: BlockData | null = this.state.map.getBlockAt(blockPosition);
 
         if (block == null) {
@@ -135,13 +141,6 @@ class StateManager {
                     console.log('You need more than: ', 10 * block.level + 10, ' units in this block.');
                 }
             }
-        }
-    }
-
-    public levelUpBlockSelected(playerName: string) {
-        const block = this.getBlockSelected(playerName);
-        if (block) {
-            this.levelUpBlock(block);
         }
     }
 
