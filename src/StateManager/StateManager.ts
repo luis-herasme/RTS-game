@@ -2,14 +2,12 @@ import {
     BlockData,
     BlockDataValidToAPlayer,
     BlockPosition,
-    PlayerConfiguration,
     PlayerData,
     PlayerDisplayData,
     State,
     Visibility
 } from './stateManagementTypes';
 import { NONE_PLAYER_DATA } from '../constants/constants';
-import AI from '../AI';
 
 class StateManager {
     private state: State;
@@ -17,20 +15,12 @@ class StateManager {
     private BLOCK_MAX_LEVEL: number = 3;
     private settlementUpdateTime: number = 3000;
     private nonSettlementUpdateTime: number = 5000;
-    private ais: AI[] = [];
 
     constructor(state: State) {
         this.state = state;
-
-        for (const aiData of this.state.players.values()) {
-            if (aiData.bot) {
-                this.loadAI(aiData);
-            }
-        }
     }
 
     public start(): void {
-        this.ais.forEach((ai) => ai.start());
         this.updateBlocksPopulation();
         setInterval(() => {
             this.update();
@@ -171,11 +161,6 @@ class StateManager {
         );
 
         return playersDisplayDataWithoutNone;
-    }
-
-    private loadAI(aiData: PlayerConfiguration) {
-        const ai = new AI(aiData.name, aiData.color, aiData.capital, this);
-        this.ais.push(ai);
     }
 
     private updateBlocksPopulation() {

@@ -3,6 +3,7 @@ import Scene from '../Scene';
 import { BlockDataValidToAPlayer, BlockPosition, GameConfiguration, PlayerDisplayData } from './stateManagementTypes';
 import StateManager from './StateManager';
 import { generateStateFromGameConfiguration } from './stateGenerator';
+import AI from '../AI';
 
 class SinglePlayerStateManager {
     private player: Player;
@@ -17,6 +18,13 @@ class SinglePlayerStateManager {
         const initialState = generateStateFromGameConfiguration(configuration);
         const stateManager = new StateManager(initialState);
         stateManager.start();
+
+        for (const aiData of initialState.players.values()) {
+            if (aiData.bot) {
+                const ai = new AI(aiData.name, aiData.color, aiData.capital, stateManager);
+                ai.start();
+            }
+        }
 
         this.stateManager = stateManager;
     }
