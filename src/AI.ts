@@ -4,7 +4,7 @@ import { BlockPosition } from './StateManager/stateManagementTypes';
 
 class AI extends Player {
     private stateManager: StateManager;
-    private blockSelected: BlockPosition | null;
+    private blockSelected: BlockPosition | undefined;
     private movementFrequency: number = 10;
 
     constructor(name: string, color: string, capital: BlockPosition, stateManager: StateManager) {
@@ -51,7 +51,7 @@ class AI extends Player {
 
     private move(): void {
         this.blockSelected = this.stateManager.getBlockSelected(this.name);
-        if (this.blockSelected !== null) {
+        if (this.blockSelected) {
             let { x, y } = this.getNextStep();
             x += this.blockSelected.x;
             y += this.blockSelected.y;

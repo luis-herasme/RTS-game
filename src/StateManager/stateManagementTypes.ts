@@ -1,4 +1,4 @@
-import StateMap from './StateMap';
+import StateMap from './GameMap';
 
 export interface PlayerConfiguration {
     name: string;

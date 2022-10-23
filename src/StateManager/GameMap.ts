@@ -1,6 +1,6 @@
 import { BlockData, BlockPosition } from './stateManagementTypes';
 
-class StateMap {
+class GameMap {
     private map: Array<Array<BlockData>>;
 
     constructor(map: Array<Array<BlockData>>) {
@@ -56,4 +56,4 @@ class StateMap {
     }
 }
 
-export default StateMap;
+export default GameMap;

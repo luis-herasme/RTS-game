@@ -7,7 +7,7 @@ import {
     GameConfiguration,
     Visibility
 } from './stateManagementTypes';
-import StateMap from './StateMap';
+import StateMap from './GameMap';
 
 function generateMapStateFromMap(map: Array<Array<string>>) {
     const mapState: Array<Array<BlockData>> = [];

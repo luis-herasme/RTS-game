@@ -14,10 +14,8 @@ class SinglePlayerStateManager {
         this.scene = scene;
 
         // State Configuration
-        const stateManager = new StateManager();
         const initialState = generateStateFromGameConfiguration(configuration);
-        stateManager.loadState(initialState);
-        stateManager.updateBlocksPopulation();
+        const stateManager = new StateManager(initialState);
         stateManager.start();
 
         this.stateManager = stateManager;
