@@ -1,0 +1,9 @@
+getBlockSelected			// AI
+getPlayerData				// Single	AI
+move					// Single	AI
+checkIfAlive				// Single	
+getWinner				// Single	
+getBoardState				// Single
+setBlockSelectedFromClick		// Single	AI
+levelUpBlockSelected			// Single	
+getLeaderBoard	`			// Single	

@@ -1,6 +1,4 @@
-import Block from '../Block';
-import { BlockData, PlayerData, State, Visibility } from './stateManagementTypes';
-import StateMap from './GameMap';
+import { BlockData, Visibility } from './stateManagementTypes';
 
 // ! This is just for initial scene, capital position is needed
 

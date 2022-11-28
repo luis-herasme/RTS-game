@@ -1,4 +1,4 @@
-import StateMap from './GameMap';
+import StateMap from '../GameMap';
 
 export interface PlayerConfiguration {
     name: string;
@@ -30,10 +30,7 @@ export interface State {
 export interface BlockData {
     ownerName: string;
     previousOwnerName: string;
-    position: {
-        x: number;
-        y: number;
-    };
+    position: BlockPosition;
     population: number;
     type: string;
     level: number;

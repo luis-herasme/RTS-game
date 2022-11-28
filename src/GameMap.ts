@@ -1,4 +1,4 @@
-import { BlockData, BlockPosition } from './stateManagementTypes';
+import { BlockData, BlockPosition } from './StateManager/stateManagementTypes';
 
 class GameMap {
     private map: Array<Array<BlockData>>;

@@ -46,7 +46,7 @@ class SinglePlayerStateManager {
         const playerData = this.stateManager.getPlayerData(this.player.name);
 
         if (playerData.blockSelected !== null) {
-            this.player.cursor.blockSelected =
+            this.player.blockSelected =
                 this.scene.map[playerData.blockSelected.position.y][playerData.blockSelected.position.x];
         }
     }
@@ -72,14 +72,6 @@ class SinglePlayerStateManager {
 
     public setBlockSelectedFromClick(playerName: string, blockPosition: BlockPosition) {
         this.stateManager.setBlockSelectedFromClick(playerName, blockPosition);
-    }
-
-    public getWinner(): string | null {
-        return this.stateManager.getWinner();
-    }
-
-    public checkIfAlive(): boolean {
-        return this.stateManager.checkIfAlive(this.player.name);
     }
 }
 

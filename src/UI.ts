@@ -1,5 +1,5 @@
+import Block from './Block';
 import { NONE_PLAYER } from './constants/NONE_PLAYER';
-import Cursor from './Cursor';
 import FPS from './FPSManager';
 import Settlement from './Settlement';
 import ClientStateManager from './StateManager/SinglePlayerStateManager';
@@ -24,7 +24,7 @@ class UI {
         this.playerName = playerName;
     }
 
-    public start(cursor: Cursor) {
+    public start(cursor: Block | null) {
         this.startLevelUpOnClickEvent();
         setInterval(() => {
             this.updateFPS();
@@ -91,16 +91,16 @@ class UI {
         }
     }
 
-    private updateLevelUpButtonVisibility(cursor: Cursor) {
+    private updateLevelUpButtonVisibility(blockSelected: Block | null) {
         if (this.levelUpButton == null) {
             throw Error('LevelUpButton DOM element not defined.');
         }
-        if (cursor.blockSelected) {
-            if (Settlement.isSettlement(cursor.blockSelected)) {
+        if (blockSelected) {
+            if (Settlement.isSettlement(blockSelected)) {
                 if (
-                    cursor.blockSelected.ownerName !== NONE_PLAYER.name &&
-                    cursor.blockSelected.level < 3 &&
-                    cursor.blockSelected.population > 10 * cursor.blockSelected.level + 10
+                    blockSelected.ownerName !== NONE_PLAYER.name &&
+                    blockSelected.level < 3 &&
+                    blockSelected.population > 10 * blockSelected.level + 10
                 ) {
                     this.levelUpButton.style.visibility = 'visible';
                 } else {

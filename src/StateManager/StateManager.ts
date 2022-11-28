@@ -93,6 +93,7 @@ class StateManager {
             this.setBlockSelected(block, this.getPlayerData(playerName));
             return true;
         }
+
         return false;
     }
 

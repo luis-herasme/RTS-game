@@ -1,8 +1,10 @@
 import Block from './Block';
-import { BLOCK_DEFAULT_SIZE } from './constants/constants';
 import FPS from './FPSManager';
 import Scene from './Scene';
+import { signalBus } from './util/SignalBus';
 import Vector from './Vector';
+import { BLOCK_DEFAULT_SIZE, FORCE } from './constants/constants';
+import { MouseDrag, mouseEvents, MouseUp, Wheel } from './MouseEvents';
 
 class Camera {
     public position: Vector = new Vector(0, 0);
@@ -14,6 +16,7 @@ class Camera {
 
     constructor(scene: Scene) {
         this.scene = scene;
+        this.listenToCameraEvents();
     }
 
     public setCenterAtBlock(block: Block): void {
@@ -42,6 +45,42 @@ class Camera {
     public updateBlocksRelativePosition(): void {
         this.scene.eachBlock((block: Block) => {
             block.positionRelativeToCamera = Vector.add(block.absolutePosition, this.position);
+        });
+    }
+
+    private listenToCameraEvents() {
+        signalBus.on(MouseDrag, ({ displacement }) => {
+            this.position.add(displacement);
+        });
+
+        signalBus.on(MouseUp, ({ clickDuration }) => {
+            const mouseUpPosition = mouseEvents.getMouseUpPosition();
+            const mouseDownPosition = mouseEvents.getMouseDownPosition();
+
+            if (clickDuration < 200) {
+                const direction = Vector.sub(mouseUpPosition, mouseDownPosition);
+                direction.mult(0.15);
+                this.addForce(direction);
+            }
+        });
+
+        signalBus.on(Wheel, ({ mouseDisplacement }) => {
+            this.position.sub(mouseDisplacement);
+            this.updateBlocksRelativePosition();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLocaleLowerCase();
+
+            if (key === 'w') {
+                this.addForce(new Vector(0, FORCE));
+            } else if (key === 's') {
+                this.addForce(new Vector(0, -FORCE));
+            } else if (key === 'd') {
+                this.addForce(new Vector(-FORCE, 0));
+            } else if (key === 'a') {
+                this.addForce(new Vector(FORCE, 0));
+            }
         });
     }
 }

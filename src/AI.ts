@@ -4,12 +4,12 @@ import { BlockPosition } from './StateManager/stateManagementTypes';
 
 class AI extends Player {
     private stateManager: StateManager;
-    private blockSelected: BlockPosition | undefined;
+    private blockSelectedPosition: BlockPosition | undefined;
     private movementFrequency: number = 10;
 
     constructor(name: string, color: string, capital: BlockPosition, stateManager: StateManager) {
         super(name, color, capital);
-        this.blockSelected = capital;
+        this.blockSelectedPosition = capital;
         this.stateManager = stateManager;
     }
 
@@ -18,7 +18,7 @@ class AI extends Player {
 
         const playerData = this.stateManager.getPlayerData(this.name);
         if (playerData.blockSelected !== null) {
-            this.blockSelected = playerData.blockSelected.position;
+            this.blockSelectedPosition = playerData.blockSelected.position;
         }
 
         setInterval(() => {
@@ -50,13 +50,14 @@ class AI extends Player {
     }
 
     private move(): void {
-        this.blockSelected = this.stateManager.getBlockSelected(this.name);
-        if (this.blockSelected) {
+        this.blockSelectedPosition = this.stateManager.getBlockSelected(this.name);
+        if (this.blockSelectedPosition) {
             let { x, y } = this.getNextStep();
-            x += this.blockSelected.x;
-            y += this.blockSelected.y;
-            if (this.stateManager.move({ x, y }, this.blockSelected, this.name, false)) {
-                this.blockSelected = { x, y };
+            x += this.blockSelectedPosition.x;
+            y += this.blockSelectedPosition.y;
+            const moved = this.stateManager.move({ x, y }, this.blockSelectedPosition, this.name, false);
+            if (moved) {
+                this.blockSelectedPosition = { x, y };
             }
         }
     }
