@@ -2,8 +2,8 @@ import Block from './Block';
 import { NONE_PLAYER } from './constants/NONE_PLAYER';
 import FPS from './FPSManager';
 import Settlement from './Settlement';
-import ClientStateManager from './StateManager/SinglePlayerStateManager';
 import { PlayerDisplayData } from './StateManager/stateManagementTypes';
+import { eventBus } from './util/EventBus';
 
 class UI {
     private population: HTMLElement | null;
@@ -11,16 +11,14 @@ class UI {
     private updateRate: number;
     private playersLeaderBoard: HTMLElement | null;
     private fps: HTMLElement | null;
-    private clientStateManager: ClientStateManager;
     private playerName: string;
 
-    constructor(clientStateManager: ClientStateManager, playerName: string, updateRate: number = 500) {
+    constructor(playerName: string, updateRate: number = 500) {
         this.population = document.getElementById('population');
         this.levelUpButton = document.getElementById('levelUp');
         this.playersLeaderBoard = document.getElementById('playersLeaderBoard');
         this.fps = document.getElementById('FPS');
         this.updateRate = updateRate;
-        this.clientStateManager = clientStateManager;
         this.playerName = playerName;
     }
 
@@ -31,8 +29,11 @@ class UI {
         }, 50);
         setInterval(() => {
             this.updateLevelUpButtonVisibility(cursor);
-            this.updateLeaderBoardAndPopulation();
         }, this.updateRate);
+
+        eventBus.read('leader-board', ({ leaderBoard }) => {
+            this.updateLeaderBoardAndPopulation(leaderBoard);
+        });
     }
 
     private updateFPS(): void {
@@ -43,8 +44,7 @@ class UI {
         }
     }
 
-    private updateLeaderBoardAndPopulation() {
-        const playersDisplayData: Array<PlayerDisplayData> = this.clientStateManager.getLeaderBoard();
+    private updateLeaderBoardAndPopulation(playersDisplayData: PlayerDisplayData[]) {
         let leaderBoard = '';
         playersDisplayData.sort((p1: PlayerDisplayData, p2: PlayerDisplayData) => p2.population - p1.population);
 
@@ -84,7 +84,7 @@ class UI {
     private startLevelUpOnClickEvent() {
         if (this.levelUpButton !== null) {
             this.levelUpButton.onclick = () => {
-                this.clientStateManager.levelUpBlockSelected(this.playerName);
+                eventBus.emit({ type: 'level-up-block-selected', id: this.playerName });
             };
         } else {
             console.warn('Level up button element html is not defined.');

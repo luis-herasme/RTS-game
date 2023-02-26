@@ -1,4 +1,4 @@
-import { BlockPosition, PlayerDisplayData } from './stateManagementTypes';
+import { BlockDataValidToAPlayer, BlockPosition, PlayerDisplayData } from './stateManagementTypes';
 
 // Messages to StateManager
 
@@ -57,4 +57,9 @@ export type PlayerData = {
     data: PlayerData;
 };
 
-export type ReadMessages = Kill | LeaderBoard | Winner | BlockSelected | PlayerData;
+export type BoardState = {
+    type: 'board-state';
+    data: BlockDataValidToAPlayer[];
+};
+
+export type ReadMessages = Kill | LeaderBoard | Winner | BlockSelected | PlayerData | BoardState;

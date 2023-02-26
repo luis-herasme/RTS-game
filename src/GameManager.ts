@@ -5,8 +5,7 @@ import FPS from './FPSManager';
 import Player from './Player';
 import Scene from './Scene';
 import UI from './UI';
-import { EventBus } from './util/EventBus';
-import { ReadMessages, WriteMessages } from './StateManager/messageTypes';
+import { eventBus } from './util/EventBus';
 import { signalBus } from './util/SignalBus';
 import { mouseEvents, MouseUp } from './MouseEvents';
 import Block from './Block';
@@ -21,7 +20,6 @@ class GameManager {
     private uiManager: UI;
     private fpsManager: FPS;
     private clientStateManager: ClientStateManager;
-    private eventBus: EventBus<ReadMessages, WriteMessages> = new EventBus<ReadMessages, WriteMessages>();
 
     constructor(scene: Scene, player: Player, clientStateManager: ClientStateManager) {
         this.scene = scene;
@@ -30,7 +28,7 @@ class GameManager {
         this.fpsManager = new FPS();
         this.camera = new Camera(scene);
         this.clientStateManager = clientStateManager;
-        this.uiManager = new UI(this.clientStateManager, this.player.name);
+        this.uiManager = new UI(this.player.name);
         // set camera initial position to player capital position
         const capital = this.scene.getBlockAt(this.player.capital.x, this.player.capital.y);
         this.camera.setCenterAtBlock(capital);
@@ -38,16 +36,27 @@ class GameManager {
     }
 
     private listenGameEvents() {
-        this.eventBus.read('winner', ({ winnerId }) => {
+        eventBus.read('winner', ({ winnerId }) => {
             this.showWinner(winnerId);
         });
 
-        this.eventBus.read('kill', ({ to, from }) => {
+        eventBus.read('kill', ({ to, from }) => {
             if (to.id === this.player.id) {
                 alert(`You lost!`);
                 this.player.alive = false;
             } else {
                 alert(`${from.name} killed ${to.name}!`);
+            }
+        });
+
+        eventBus.read('block-selected', ({ position }) => {
+            this.player.blockSelected = this.scene.map[position.y][position.x];
+        });
+
+        eventBus.read('board-state', ({ data }) => {
+            for (let blockNewData of data) {
+                const block = this.scene.getBlockAt(blockNewData.position.x, blockNewData.position.y);
+                block.updateState(blockNewData);
             }
         });
 
@@ -133,7 +142,6 @@ class GameManager {
     }
 
     private update() {
-        this.clientStateManager.update();
         this.fpsManager.update();
         this.scene.render();
         this.player.render();

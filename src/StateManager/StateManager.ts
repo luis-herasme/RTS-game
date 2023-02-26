@@ -8,6 +8,7 @@ import {
     Visibility
 } from './stateManagementTypes';
 import { NONE_PLAYER_DATA } from '../constants/constants';
+import { eventBus } from '../util/EventBus';
 
 class StateManager {
     private state: State;
@@ -418,6 +419,23 @@ class StateManager {
         for (const player of this.state.players.values()) {
             if (player.name !== 'NONE') {
                 this.updateAlive(player);
+                const playerData = this.getPlayerData(player.name);
+                const boardState = this.getBoardState(player.name);
+                const leaderBoard = this.getLeaderBoard();
+
+                eventBus.emit({ type: 'leader-board', leaderBoard });
+
+                if (playerData.blockSelected && player.name === 'luis') {
+                    eventBus.emit({
+                        type: 'block-selected',
+                        position: playerData.blockSelected.position
+                    });
+                }
+
+                eventBus.emit({
+                    type: 'board-state',
+                    data: boardState
+                });
             }
 
             if (player.alive && player.blockSelected?.ownerName !== player.name) {

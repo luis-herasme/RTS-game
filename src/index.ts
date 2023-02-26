@@ -17,7 +17,7 @@ function getUserPlayerFromConfiguration(configuration: GameConfiguration): Playe
 export function startSinglePlayerGame(configuration: GameConfiguration) {
     let player: Player = getUserPlayerFromConfiguration(configuration);
     const scene = new Scene(configuration.map);
-    const singlePlayerStateManager = new SinglePlayerStateManager(player, scene, configuration);
+    const singlePlayerStateManager = new SinglePlayerStateManager(configuration);
     const gameManager = new GameManager(scene, player, singlePlayerStateManager);
     gameManager.start();
 }

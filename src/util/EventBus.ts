@@ -1,3 +1,5 @@
+import { ReadMessages, WriteMessages } from '../StateManager/messageTypes';
+
 export class EventBus<ReadTypes extends { type: string }, WriteTypes extends { type: string }> {
     private readonly listeners: Map<string, ((signal: any) => void)[]> = new Map();
 
@@ -20,3 +22,5 @@ export class EventBus<ReadTypes extends { type: string }, WriteTypes extends { t
         }
     }
 }
+
+export const eventBus = new EventBus<ReadMessages | WriteMessages, ReadMessages | WriteMessages>();
